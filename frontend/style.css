@@ -1,0 +1,75 @@
+
+/* Configurações de Cores e Fontes */
+:root {
+    --primary-color: #4A90E2;    /* Mude aqui para sua cor  */
+    --secondary-color: #a6a6a6;
+    --bg-color: #dbbd8b;
+    --white: #ffffff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    background: var(--white);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Seção Principal (Hero) */
+.hero {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/fundo.jpg'); /* Se tiver imagem, ela aparece aqui */
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+
+/* Card de Login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+.login-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.input-group { margin-bottom: 15px; }
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary:hover { background: #357ABD; }
