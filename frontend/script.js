@@ -1,16 +1,16 @@
-const loginForm = document.getElementById('login-form');
-
-loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Impede a página de recarregar
-
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const msgErro = document.getElementById('msg-erro');
 
-    console.log("Tentando logar com:", email);
-
-    // Futuramente, você fará o fetch() para o seu backend aqui:
-    // const resposta = await fetch('http://localhost:3000/login', { ... });
-    
-    alert("Botão funcionando! Agora falta integrar com seu backend.");
+    // Simulação de autenticação
+    if (email === "admin@alimconect.com" && password === "123456") {
+        alert("Login realizado com sucesso! Redirecionando para o Dashboard...");
+        msgErro.textContent = "";
+        // window.location.href = "dashboard.html"; // Exemplo de redirecionamento
+    } else {
+        msgErro.textContent = "Usuário ou senha inválidos. Tente novamente.";
+    }
 });
-
