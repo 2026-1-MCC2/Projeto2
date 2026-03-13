@@ -2,7 +2,7 @@
 /* Configurações de Cores e Fontes */
 :root {
     --primary-color: #4A90E2;    /* Mude aqui para sua cor  */
-    --secondary-color: #a6a6a6;
+    --secondary-color: #ac814f;
     --bg-color: #dbbd8b;
     --white: #ffffff;
 }
@@ -23,16 +23,20 @@ body {
 }
 
 /* Seção Principal (Hero) */
+/* Atualize o CSS existente */
 .hero {
-    height: 300px;
+    height: 400px; /* Aumentei a altura para destacar a imagem */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/fundo.jpg'); /* Se tiver imagem, ela aparece aqui */
+    /* Substitua a linha abaixo */
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('assets/banner-rústico.jpg');
     background-size: cover;
+    background-position: center;
     color: white;
     text-align: center;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.5); /* Adiciona um sombreado interno para melhorar o contraste do texto */
 }
 
 /* Card de Login */
