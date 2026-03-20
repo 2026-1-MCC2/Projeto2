@@ -14,6 +14,8 @@
             --laranja-claro: #FFCC80;
             --marrom-texto: #5D4037;
         }
+        #sugestoes-busca::-webkit-scrollbar { width: 6px; }
+        #sugestoes-busca::-webkit-scrollbar-thumb { background: #FFCC80; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-[#FAF9F6] text-slate-900">
@@ -23,7 +25,22 @@
             <span class="material-symbols-outlined text-[#FFCC80]">nutrition</span>
             <span class="text-xl font-extrabold tracking-tight">AlimConect</span>
         </div>
-        <nav class="hidden md:flex gap-8 font-semibold text-sm text-slate-600">
+
+        <div class="hidden lg:flex relative w-1/3">
+            <div class="relative w-full">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input 
+                    type="text" 
+                    id="input-busca" 
+                    placeholder="O que você está procurando?" 
+                    autocomplete="off"
+                    class="w-full pl-10 pr-4 py-2 bg-slate-50 rounded-full border border-slate-200 outline-none focus:ring-2 focus:ring-[#FFCC80] transition text-sm"
+                >
+            </div>
+            <div id="sugestoes-busca" class="hidden absolute top-full left-0 w-full bg-white mt-2 rounded-xl shadow-2xl border border-slate-100 max-h-80 overflow-y-auto z-[60]"></div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600">
             <a href="#" class="hover:text-[#5D4037]">Início</a>
             <a href="#sobre" class="hover:text-[#5D4037]">Quem Somos</a>
             <a href="#produtos" class="hover:text-[#5D4037]">Produtos</a>
@@ -35,12 +52,9 @@
     <main>
         <section class="relative px-6 py-24 md:py-40 text-center overflow-hidden">
             <div class="absolute inset-0 z-0">
-                <img src="assets/banner.png" 
-                     class="w-full h-full object-cover" 
-                     alt="Fundo AlimConect">
+                <img src="assets/banner.png" class="w-full h-full object-cover" alt="Fundo AlimConect">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
-
             <div class="relative z-10 max-w-4xl mx-auto">
                 <h1 class="text-4xl md:text-6xl font-black text-white mb-4 drop-shadow-md">
                     Conectando o Mundo das <span class="text-[#FFCC80]">Nozes e Snacks</span>
@@ -65,7 +79,6 @@
                         Somos uma plataforma dedicada a facilitar a negociação entre produtores agrícolas e compradores em escala. Nosso foco é transparência, qualidade e rapidez na cadeia de suprimentos de alimentos secos.
                     </p>
                 </div>
-
                 <div id="contato" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
                     <div class="size-12 bg-[#F5F5DC] text-[#FFCC80] rounded-full flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined">contact_support</span>
@@ -81,91 +94,69 @@
         <section id="produtos" class="px-6 py-16 max-w-6xl mx-auto">
             <h2 class="text-3xl font-bold mb-8 text-[#5D4037]">Nossos Produtos</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/amendoim.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Amendoim">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/amendoim.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Amendoim</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
                         <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <a href="produto.html?item=amendoim" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/batata.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Batata Chips">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/batata.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Batata Chips</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
                         <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <a href="produto.html?item=batata" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/biscoito.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Biscoito">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/biscoito.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Biscoitos de Polvilho</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
-                      <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
+                        <a href="produto.html?item=biscoito" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/castanhas.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Castanhas">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/castanhas.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Castanha</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
-                       <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
+                        <a href="produto.html?item=castanha" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/castanhasmistas.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Mix de Castanhas">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/castanhasmistas.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Mix de Castanhas</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
-                       <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
+                        <a href="produto.html?item=mix-castanhas" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/milho.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Milho">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/milho.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Milho</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
-                      <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
+                        <a href="produto.html?item=milho" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 group">
-                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="assets/pretzel.png" class="w-full h-full object-cover group-hover:scale-105 transition" alt="Pretzel">
-                    </div>
+                    <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden"><img src="assets/pretzel.png" class="w-full h-full object-cover group-hover:scale-105 transition"></div>
                     <h3 class="font-bold text-lg text-[#5D4037]">Pretzel Salgado</h3>
                     <p class="text-slate-500 text-sm">Produção Nacional</p>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-50">
-                    <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
-                        <button class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</button>
+                        <span class="font-bold text-slate-700 text-xs uppercase">Peso: 40g</span>
+                        <a href="produto.html?item=pretzel" class="text-sm font-bold text-[#FFCC80] hover:text-[#ffbd5c]">Ver Detalhes</a>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -175,18 +166,17 @@
                     <h2 class="text-3xl font-bold text-[#5D4037]">Acesse sua Conta</h2>
                     <p class="text-slate-500">Portal do Fornecedor e Comprador</p>
                 </div>
-                <form id="login-form" class="space-y-4">
+                <form class="space-y-4">
                     <div>
                         <label class="block text-sm font-bold mb-1 text-slate-700">E-mail</label>
-                        <input type="email" id="email" class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-[#FFCC80]" placeholder="exemplo@empresa.com" required>
+                        <input type="email" class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-[#FFCC80]" placeholder="exemplo@empresa.com">
                     </div>
                     <div>
                         <label class="block text-sm font-bold mb-1 text-slate-700">Senha</label>
-                        <input type="password" id="password" class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-[#FFCC80]" placeholder="******" required>
+                        <input type="password" class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-[#FFCC80]" placeholder="******">
                     </div>
                     <button type="submit" class="w-full bg-[#FFCC80] text-[#5D4037] font-bold py-3 rounded-lg shadow-md hover:bg-[#ffbd5c] transition">Entrar no Sistema</button>
                 </form>
-                <p id="msg-erro" class="text-red-500 text-sm mt-4 text-center"></p>
             </div>
         </section>
     </main>
@@ -195,6 +185,49 @@
         <p>&copy; 2026 AlimConect Marketplace. Todos os direitos reservados.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        const produtos = [
+            { id: 'amendoim', nome: 'Amendoim Pimenta e Limão', foto: 'assets/amendoim.png', preco: '8,50' },
+            { id: 'batata', nome: 'Batata Chips Artesanal', foto: 'assets/batata.png', preco: '12,00' },
+            { id: 'biscoito', nome: 'Biscoitos de Polvilho', foto: 'assets/biscoito.png', preco: '6,90' },
+            { id: 'castanha', nome: 'Castanha de Caju Premium', foto: 'assets/castanhas.png', preco: '15,00' },
+            { id: 'mix-castanhas', nome: 'Mix de Castanhas Mistas', foto: 'assets/castanhasmistas.png', preco: '18,50' },
+            { id: 'milho', nome: 'Snacks de Milho Torrado', foto: 'assets/milho.png', preco: '7,50' },
+            { id: 'pretzel', nome: 'Pretzel Salgado Tradicional', foto: 'assets/pretzel.png', preco: '9,00' }
+        ];
+
+        const inputBusca = document.getElementById('input-busca');
+        const listaSugestoes = document.getElementById('sugestoes-busca');
+
+        inputBusca.addEventListener('input', () => {
+            const termo = inputBusca.value.toLowerCase();
+            listaSugestoes.innerHTML = '';
+            if (termo.length > 0) {
+                const filtrados = produtos.filter(p => p.nome.toLowerCase().includes(termo));
+                if (filtrados.length > 0) {
+                    listaSugestoes.classList.remove('hidden');
+                    filtrados.forEach(p => {
+                        const div = document.createElement('div');
+                        div.className = "flex items-center gap-3 p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0";
+                        div.innerHTML = `<img src="${p.foto}" class="w-10 h-10 object-cover rounded-lg"><div><p class="text-sm font-bold text-[#5D4037]">${p.nome}</p><p class="text-xs text-slate-400">R$ ${p.preco}</p></div>`;
+                        div.onclick = () => window.location.href = `produto.html?item=${p.id}`;
+                        listaSugestoes.appendChild(div);
+                    });
+                } else { listaSugestoes.classList.add('hidden'); }
+            } else { listaSugestoes.classList.add('hidden'); }
+        });
+
+        inputBusca.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const termo = inputBusca.value.toLowerCase();
+                const primeiro = produtos.find(p => p.nome.toLowerCase().includes(termo));
+                if (primeiro) window.location.href = `produto.html?item=${primeiro.id}`;
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.relative')) listaSugestoes.classList.add('hidden');
+        });
+    </script>
 </body>
 </html>
