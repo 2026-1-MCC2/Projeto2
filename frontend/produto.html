@@ -5,81 +5,76 @@
     <title>Detalhes do Produto - AlimConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Manrope', sans-serif; }
-    </style>
+    <style>body { font-family: 'Manrope', sans-serif; }</style>
 </head>
 <body class="bg-[#FAF9F6]">
     <div class="max-w-6xl mx-auto p-10">
-        <a href="index.html" class="text-[#5D4037] font-bold hover:underline">← Voltar para o Início</a>
+        <a href="index.html" class="text-[#5D4037] font-bold underline">← Voltar para o Início</a>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10 bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-            <div id="foto-produto" class="h-96 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden">
+            <div class="h-96 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden">
                 <img id="img-detalhe" src="" class="max-h-full object-contain hover:scale-105 transition duration-300">
             </div>
 
             <div class="flex flex-col justify-center">
                 <span class="text-[#FFCC80] font-bold uppercase tracking-widest text-sm">Produção Nacional</span>
                 <h1 id="nome-produto" class="text-4xl font-black text-[#5D4037] mt-2">Carregando...</h1>
-                <p id="peso-produto" class="text-slate-500 mt-2 font-medium">Peso Líquido: 40g</p>
                 
-                <div class="mt-8 p-4 bg-[#F5F5DC]/30 rounded-xl inline-block w-fit">
-                    <span class="text-slate-600 text-sm block">Preço unitário</span>
+                <div class="mt-8 p-4 bg-[#F5F5DC]/30 rounded-xl w-fit">
                     <span class="text-3xl font-bold text-slate-900">R$ <span id="preco-produto">0,00</span></span>
                 </div>
 
-                <button class="mt-8 w-full bg-[#FFCC80] text-[#5D4037] font-bold py-4 rounded-xl shadow-lg hover:bg-[#ffbd5c] transition transform active:scale-95">
+                <div class="flex items-center gap-4 mt-8">
+                    <span class="font-bold text-[#5D4037]">Quantidade:</span>
+                    <div class="flex items-center bg-slate-100 rounded-lg border">
+                        <button onclick="changeQtd(-1)" class="px-4 py-2 font-bold text-slate-600">-</button>
+                        <span id="qtd" class="px-6 py-2 font-bold text-lg border-x">1</span>
+                        <button onclick="changeQtd(1)" class="px-4 py-2 font-bold text-slate-600">+</button>
+                    </div>
+                </div>
+
+                <button onclick="addCart()" class="mt-8 w-full bg-[#FFCC80] text-[#5D4037] font-bold py-4 rounded-xl shadow-lg hover:bg-[#ffbd5c] transition transform active:scale-95">
                     Adicionar ao Carrinho
                 </button>
-                
-                <p class="text-xs text-slate-400 mt-4 text-center">Compra segura para revendedores B2B</p>
             </div>
         </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const produto = params.get('item');
+        const item = params.get('item');
+        const db = {
+            'amendoim': { id: 'amendoim', nome: "Amendoim Pimenta e Limão", foto: "assets/amendoim.png", preco: 8.50 },
+            'batata': { id: 'batata', nome: "Batata Chips Artesanal", foto: "assets/batata.png", preco: 12.00 },
+            'biscoito': { id: 'biscoito', nome: "Biscoitos de Polvilho", foto: "assets/biscoito.png", preco: 6.90 },
+            'castanha': { id: 'castanha', nome: "Castanha de Caju Premium", foto: "assets/castanhas.png", preco: 15.00 },
+            'mix-castanhas': { id: 'mix-castanhas', nome: "Mix de Castanhas Mistas", foto: "assets/castanhasmistas.png", preco: 18.50 },
+            'milho': { id: 'milho', nome: "Snacks de Milho Torrado", foto: "assets/milho.png", preco: 7.50 },
+            'pretzel': { id: 'pretzel', nome: "Pretzel Salgado Tradicional", foto: "assets/pretzel.png", preco: 9.00 }
+        };
 
-        // Mapeamento manual dos produtos enquanto não usamos o Banco de Dados
-        if (produto === 'amendoim') {
-            document.getElementById('nome-produto').innerText = "Amendoim Pimenta e Limão";
-            document.getElementById('img-detalhe').src = "assets/amendoim.png";
-            document.getElementById('preco-produto').innerText = "8,50";
-        } 
-        else if (produto === 'batata') {
-            document.getElementById('nome-produto').innerText = "Batata Chips Artesanal";
-            document.getElementById('img-detalhe').src = "assets/batata.png";
-            document.getElementById('preco-produto').innerText = "12,00";
+        const prod = db[item];
+        let qtd = 1;
+
+        if (prod) {
+            document.getElementById('nome-produto').innerText = prod.nome;
+            document.getElementById('img-detalhe').src = prod.foto;
+            document.getElementById('preco-produto').innerText = prod.preco.toFixed(2);
         }
-        else if (produto === 'biscoito') {
-            document.getElementById('nome-produto').innerText = "Biscoitos de Polvilho";
-            document.getElementById('img-detalhe').src = "assets/biscoito.png";
-            document.getElementById('preco-produto').innerText = "6,90";
+
+        window.changeQtd = (v) => { 
+            qtd = Math.max(1, qtd + v); 
+            document.getElementById('qtd').innerText = qtd; 
         }
-        else if (produto === 'castanha') {
-            document.getElementById('nome-produto').innerText = "Castanha de Caju Premium";
-            document.getElementById('img-detalhe').src = "assets/castanhas.png";
-            document.getElementById('preco-produto').innerText = "15,00";
-        }
-        else if (produto === 'mix-castanhas') {
-            document.getElementById('nome-produto').innerText = "Mix de Castanhas Mistas";
-            document.getElementById('img-detalhe').src = "assets/castanhasmistas.png";
-            document.getElementById('preco-produto').innerText = "18,50";
-        }
-        else if (produto === 'milho') {
-            document.getElementById('nome-produto').innerText = "Snacks de Milho Torrado";
-            document.getElementById('img-detalhe').src = "assets/milho.png";
-            document.getElementById('preco-produto').innerText = "7,50";
-        }
-        else if (produto === 'pretzel') {
-            document.getElementById('nome-produto').innerText = "Pretzel Salgado Tradicional";
-            document.getElementById('img-detalhe').src = "assets/pretzel.png";
-            document.getElementById('preco-produto').innerText = "9,00";
-        }
-        else {
-            // Caso não encontre o produto
-            document.getElementById('nome-produto').innerText = "Produto não encontrado";
+
+        window.addCart = () => {
+            if(!prod) return;
+            let carrinho = JSON.parse(localStorage.getItem('carrinhoAlim')) || [];
+            const index = carrinho.findIndex(c => c.id === prod.id);
+            if(index > -1) carrinho[index].qtd += qtd;
+            else carrinho.push({...prod, qtd: qtd});
+            localStorage.setItem('carrinhoAlim', JSON.stringify(carrinho));
+            window.location.href = 'carrinho.html';
         }
     </script>
 </body>
