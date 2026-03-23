@@ -12,8 +12,18 @@
         <a href="index.html" class="text-[#5D4037] font-bold underline">← Voltar para o Início</a>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10 bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-            <div class="h-96 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden">
-                <img id="img-detalhe" src="" class="max-h-full object-contain hover:scale-105 transition duration-300">
+            
+            <div class="flex gap-4">
+                <div class="flex flex-col gap-2 w-20">
+                    <img id="thumb-1" src="" onclick="trocarImagem(this.src)" 
+                         class="w-full h-20 object-contain p-1 bg-slate-50 rounded-lg border-2 border-transparent hover:border-[#FFCC80] cursor-pointer transition">
+                    <img id="thumb-2" src="" onclick="trocarImagem(this.src)" 
+                         class="w-full h-20 object-contain p-1 bg-slate-50 rounded-lg border-2 border-transparent hover:border-[#FFCC80] cursor-pointer transition">
+                </div>
+
+                <div class="flex-1 h-96 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-100">
+                    <img id="img-detalhe" src="" class="max-h-[90%] object-contain hover:scale-110 transition duration-500">
+                </div>
             </div>
 
             <div class="flex flex-col justify-center">
@@ -28,7 +38,7 @@
                     <span class="font-bold text-[#5D4037]">Quantidade:</span>
                     <div class="flex items-center bg-slate-100 rounded-lg border">
                         <button onclick="changeQtd(-1)" class="px-4 py-2 font-bold text-slate-600">-</button>
-                        <span id="qtd" class="px-6 py-2 font-bold text-lg border-x">1</span>
+                        <span id="qtd" class="px-6 py-2 font-bold text-lg border-x bg-white">1</span>
                         <button onclick="changeQtd(1)" class="px-4 py-2 font-bold text-slate-600">+</button>
                     </div>
                 </div>
@@ -43,14 +53,57 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const item = params.get('item');
+
         const db = {
-            'amendoim': { id: 'amendoim', nome: "Amendoim Pimenta e Limão", foto: "assets/amendoim.png", preco: 8.50 },
-            'batata': { id: 'batata', nome: "Batata Chips Artesanal", foto: "assets/batata.png", preco: 12.00 },
-            'biscoito': { id: 'biscoito', nome: "Biscoitos de Polvilho", foto: "assets/biscoito.png", preco: 6.90 },
-            'castanha': { id: 'castanha', nome: "Castanha de Caju Premium", foto: "assets/castanhas.png", preco: 15.00 },
-            'mix-castanhas': { id: 'mix-castanhas', nome: "Mix de Castanhas Mistas", foto: "assets/castanhasmistas.png", preco: 18.50 },
-            'milho': { id: 'milho', nome: "Snacks de Milho Torrado", foto: "assets/milho.png", preco: 7.50 },
-            'pretzel': { id: 'pretzel', nome: "Pretzel Salgado Tradicional", foto: "assets/pretzel.png", preco: 9.00 }
+            'amendoim': { 
+                id: 'amendoim', 
+                nome: "Amendoim Pimenta e Limão", 
+                foto: "assets/amendoim.png", 
+                foto2: "assets/amendoimpimenta.png", 
+                preco: 8.50 
+            },
+            'batata': { 
+                id: 'batata', 
+                nome: "Batata Chips Artesanal", 
+                foto: "assets/batata.png", 
+                foto2: "assets/batataprato.png", 
+                preco: 12.00 
+            },
+            'biscoito': { 
+                id: 'biscoito', 
+                nome: "Biscoitos de Polvilho", 
+                foto: "assets/biscoito.png", 
+                foto2: "assets/biscoitonoprato.png",
+                preco: 6.90 
+            },
+            'castanha': { 
+                id: 'castanha', 
+                nome: "Castanha de Caju Premium", 
+                foto: "assets/castanhas.png", 
+                foto2: "assets/castanhasnoprato.png", 
+                preco: 15.00 
+            },
+            'mix-castanhas': { 
+                id: 'mix-castanhas', 
+                nome: "Mix de Castanhas Mistas", 
+                foto: "assets/castanhasmistas.png", 
+                foto2: "assets/castanhaspremiumnoprato.png", 
+                preco: 18.50 
+            },
+            'milho': { 
+                id: 'milho', 
+                nome: "Snacks de Milho Torrado", 
+                foto: "assets/milho.png", 
+                foto2: "assets/milhoprato.png", 
+                preco: 7.50 
+            },
+            'pretzel': { 
+                id: 'pretzel', 
+                nome: "Pretzel Salgado Tradicional", 
+                foto: "assets/pretzel.png", 
+                foto2: "assets/pretzelprato1.png", 
+                preco: 9.00 
+            }
         };
 
         const prod = db[item];
@@ -58,8 +111,22 @@
 
         if (prod) {
             document.getElementById('nome-produto').innerText = prod.nome;
-            document.getElementById('img-detalhe').src = prod.foto;
             document.getElementById('preco-produto').innerText = prod.preco.toFixed(2);
+            document.getElementById('img-detalhe').src = prod.foto;
+
+            document.getElementById('thumb-1').src = prod.foto;
+            
+            const t2 = document.getElementById('thumb-2');
+            if (prod.foto2) {
+                t2.src = prod.foto2;
+                t2.style.display = "block";
+            } else {
+                t2.style.display = "none";
+            }
+        }
+
+        window.trocarImagem = (url) => {
+            document.getElementById('img-detalhe').src = url;
         }
 
         window.changeQtd = (v) => { 
