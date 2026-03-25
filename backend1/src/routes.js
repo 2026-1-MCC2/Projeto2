@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import upload from './uploadConfig.js'
-import {getImages, UploadImage, updateImage, deleteImage} from './controllers/imageController.js'
+import{getImages, UploadImage, 
+    updateImage, deleteImage
+} from './controllers/imageController.js'
 import {
     getUsers, getUserById,createUser,
     updateUser, deleteUser
@@ -15,7 +17,8 @@ r.put('/users/:id', updateUser)
 r.delete('/users/:id', deleteUser)
 
 r.get('/images', getImages)
-r.post('/images',upload.single('image'), UploadImage)
-r.put('/image/:id', upload.single('image'), updateImage)
-r.delete ('/image/:id'.deleteImage)
+r.post('/images', upload.single('image'), UploadImage)
+r.put('/images/:id', upload.single('image'), updateImage)
+r.delete('/image/:id', deleteImage)
+
 export default r
