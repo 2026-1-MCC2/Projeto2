@@ -7,4 +7,4 @@ app.listen(port, ()=>{
     console.log(`Servidor On em http://localhost:${port}`)
 })
 
-export default port
+
