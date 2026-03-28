@@ -21,16 +21,16 @@ Veja tutoriais do PI.
 ## Descrição AINDA ARRUMAR
 
 <p align="center">
-<img src="https://pix4free.org/assets/library/2021-01-20/originals/game.jpg" alt="NOME DO JOGO" border="0">
-  Jogo por <a href="http://www.nyphotographic.com/">Nick Youngson</a> <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> <a href="http://pix4free.org/">Pix4free</a>
+<img src="frontend/assets/Imagem__Logo_AlimConnect.png" alt="Logotipo da AlimConnct" border="0">
+  Image by Gemini
 </p>
 
 
-De um a dois parágrafos sobre o que é seu projeto e o que ele faz. AINDA PREENCHER
-<br><br>
-Meu projeto ajuda estudantes FECAP a configurar seus githubs. AINDA PREENCHER
-<br><br>
-Que a força esteja com você! AINDA PREENCHER
+O AlimConnect é um projeto interdisciplinar desenvolvido por alunos de Ciência da Computação da FECAP, especializado na criação de plataformas digitais voltadas à conexão entre fornecedores e consumidores, oferecendo soluções personalizadas para empresas que desejam expandir sua presença online.
+
+Neste projeto, a AlimConnect foi contratada pela Mr. Nut para desenvolver uma plataforma digital com foco em marketplace. O objetivo é criar um ambiente intuitivo e eficiente, onde fornecedores possam disponibilizar seus produtos e usuários possam navegar, selecionar e favorita de forma prática.
+
+A solução busca otimizar a experiência do usuário, facilitar a gestão de produtos por parte dos fornecedores e fortalecer a presença digital da empresa contratante.
 <br><br>
 
 ## 🛠 Estrutura de massas AINDA ARRUMAR
@@ -50,19 +50,16 @@ Que a força esteja com você! AINDA PREENCHER
   |-->Frontend<br>
 |readme.md<br>
 
-A pasta raiz contém dois arquivos que devem ser alterados:
-
 <b>README.MD</b>: Arquivo que serve como guia e explicação geral sobre seu projeto. O mesmo que você está lendo agora.
+### 📝 Descrição das Pastas:
 
-Há também 4 pastas que seguem da seguinte forma:
-
-<b>documentos</b>: Toda a documentação estará nesta pasta.
-
-<b>executáveis</b>: Binários e seguintes do projeto devem estar nesta pasta.
-
-<b>imagens</b>: Imagens do sistema
-
-<b>src</b>: Pasta que contém o código fonte.
+- **`documentos/`**: AINDA ARRUMAR.
+- **`AINDA ARRUMAR/`**: AINDA ARRUMAR.
+-  **`AINDA ARRUMAR/`**: AINDA ARRUMAR.
+- **`AINDA ARRUMAR/`**: AINDA ARRUMAR.
+- **`AINDA ARRUMAR`**: AINDA ARRUMAR.
+-  **`AINDA ARRUMAR`**: AINDA ARRUMAR
+- **`readme.md`**: Este arquivo que você está lendo agora, contendo informações completas sobre o projeto.
 
 ## 🛠 Instalação AINDA ARRUMAR
 
