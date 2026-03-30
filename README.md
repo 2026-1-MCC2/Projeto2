@@ -90,28 +90,8 @@ MySQL Server (v8.0 ou superior)
 
 ## 🛠 Instalação AINDA ARRUMAR
 
-<b>Android:</b>
+1. Clone o repositório:
 
-Faça o Download do JOGO.apk no seu celular.
-Execute o APK e siga as instruções do seu telefone.
-
-```sh
-Coloque o código do prompt de comando se for necessário
-```
-
-<b>Windows:</b>
-
-Não há instalação! Apenas possível!
-Encontre o JOGO.exe na pasta apresentada e execute-o como qualquer outro programa.
-
-```sh
-Coloque o código do prompt de comando se for necessário
-```
-
-<b>HTML:</b>
-
-Não há instalação! 
-Encontre o index.html na pasta encontrada e execute-o como uma página WEB (através de algum navegador).
 
 
 ## 📋 Licença/Licença AINDA ARRUMAR 
