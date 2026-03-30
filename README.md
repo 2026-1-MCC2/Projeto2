@@ -88,13 +88,72 @@ Node.js (v18 ou superior)
 
 MySQL Server (v8.0 ou superior)
 
-## 🛠 Instalação AINDA ARRUMAR
+## 🛠 Instalação 
 
-1. Clone o repositório: https://github.com/2026-1-MCC2/Projeto2.git
-2. 2. Crie o banco de dados: 
+  
+1.   Clone o repositório:
+   
+     https://github.com/2026-1-MCC2/Projeto2.git
+   
+2.   Crie o banco de dados: 
 
+    banco_de_dados/banco.mysql.sql
 
+3.   Instale as dependencias:
 
+     bd Backend
+     npm install
+
+4. ir em na pasta /Dadosenv e achar o /env.info
+   
+    cp.env.info.env
+     
+5.  Configure as variaveis de ambiente:
+
+    MYSQL_HOST=localhost
+    MYSQL_USER=root
+    MYSQL_PASSWORD=          
+    MYSQL_DB=alimconnect_db
+
+6.  Inicie o servidor
+
+   npm run dev
+
+   O servidor esta rodando em:   http://localhost:3000/api/users/:id
+Rotas da API
+
+Método    Rota           Descrição                              StatusEsperado  
+
+POST	    /api/users	     Criar um novo usuário no AlimConnect	  201
+
+GET	      /api/users	     Listar todos os usuários cadastrados	  200
+
+GET	      /api/users/:id	 Buscar um usuário específico por ID	  200
+
+PUT	      /api/users/:id	 Atualizar dados de um usuário existente	200
+
+DELETE	  /api/users/:id	 Deletar usuário do sistema por ID	    200
+
+EXEMPLO DE PUT
+{   
+  "name": "Marisa Silva"
+  "email": "maria.teste@email.com
+  "role": "admin"
+  "descripiton": "Agora sou adiministrador da AlimConnect"
+}   
+
+Banco de Dados
+
+  O banco alimconnect_db possui as seguintes tabelas:
+
+  Usuarios — Dados base de todos os usuários (Nome, Email, Senha)
+
+  Pedidos — Registros dos pedidos realizados, vinculados aos usuários
+  
+  Produtos — Catálogo de produtos com descrição e preços
+
+  Itens_Pedidos — Tabela intermediária que detalha os produtos de cada pedido (Quantidade e Valor)
+  
 ## 📋 Licença/Licença AINDA ARRUMAR 
 Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licença CC BY 4.0.
 
