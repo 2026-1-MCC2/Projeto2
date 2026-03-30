@@ -122,36 +122,36 @@ MySQL Server (v8.0 ou superior)
 
 8.  Inicie o servidor
 
-   npm run dev
+     npm run dev
 
-   O servidor esta rodando em:   http://localhost:3000/api/users/:id
+     O servidor esta rodando em:   http://localhost:3000/api/users/:id
    
 Rotas da API
 
-Método    Rota           Descrição                              StatusEsperado  
+  Método    Rota           Descrição                              StatusEsperado  
 
-POST	    /api/users	     Criar um novo usuário no AlimConnect	  201
+    POST	    /api/users	     Criar um novo usuário no AlimConnect	  201
 
-GET	      /api/users	     Listar todos os usuários cadastrados	  200
+    GET	      /api/users	     Listar todos os usuários cadastrados	  200
 
-GET	      /api/users/:id	 Buscar um usuário específico por ID	  200
+    GET	      /api/users/:id	 Buscar um usuário específico por ID	  200
 
-PUT	      /api/users/:id	 Atualizar dados de um usuário existente	200
+    PUT	      /api/users/:id	 Atualizar dados de um usuário existente	200
 
-DELETE	  /api/users/:id	 Deletar usuário do sistema por ID	    200
+    DELETE	  /api/users/:id	 Deletar usuário do sistema por ID	    200
 
 EXEMPLO DE PUT
-{   
-  "name": "Marisa Silva"
+  {   
+    "name": "Marisa Silva"
   
-  "email": "maria.teste@email.com
+    "email": "maria.teste@email.com
 
-  "role": "admin"
+    "role": "admin"
   
-  "descripiton": "Agora sou adiministrador da AlimConnect"
+    "descripiton": "Agora sou adiministrador da AlimConnect"
   
-}   
-
+  }   
+  
 Banco de Dados
 
   O banco alimconnect_db possui as seguintes tabelas:
