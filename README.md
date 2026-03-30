@@ -141,7 +141,8 @@ Rotas da API
     DELETE	  /api/users/:id	 Deletar usuário do sistema por ID	    200
 
 EXEMPLO DE PUT
-  {   
+  { 
+  
     "name": "Marisa Silva"
   
     "email": "maria.teste@email.com
@@ -154,15 +155,15 @@ EXEMPLO DE PUT
   
 Banco de Dados
 
-  O banco alimconnect_db possui as seguintes tabelas:
+    O banco alimconnect_db possui as seguintes tabelas:
 
-  Usuarios — Dados base de todos os usuários (Nome, Email, Senha)
+    Usuarios — Dados base de todos os usuários (Nome, Email, Senha)
 
-  Pedidos — Registros dos pedidos realizados, vinculados aos usuários
+    Pedidos — Registros dos pedidos realizados, vinculados aos usuários
   
-  Produtos — Catálogo de produtos com descrição e preços
+    Produtos — Catálogo de produtos com descrição e preços
 
-  Itens_Pedidos — Tabela intermediária que detalha os produtos de cada pedido (Quantidade e Valor)
+    Itens_Pedidos — Tabela intermediária que detalha os produtos de cada pedido (Quantidade e Valor)
   
 ## 📋 Licença/Licença AINDA ARRUMAR 
 Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licença CC BY 4.0.
