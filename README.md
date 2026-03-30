@@ -102,24 +102,30 @@ MySQL Server (v8.0 ou superior)
 3.   Instale as dependencias:
 
      bd Backend
+     
      npm install
 
-4. ir em na pasta /Dadosenv e achar o /env.info
+5. ir em na pasta /Dadosenv e achar o /env.info
    
     cp.env.info.env
      
-5.  Configure as variaveis de ambiente:
+6.  Configure as variaveis de ambiente:
 
     MYSQL_HOST=localhost
+    
     MYSQL_USER=root
-    MYSQL_PASSWORD=          
+    
+    MYSQL_PASSWORD=
+         
     MYSQL_DB=alimconnect_db
+    
 
-6.  Inicie o servidor
+8.  Inicie o servidor
 
    npm run dev
 
    O servidor esta rodando em:   http://localhost:3000/api/users/:id
+   
 Rotas da API
 
 Método    Rota           Descrição                              StatusEsperado  
@@ -137,9 +143,13 @@ DELETE	  /api/users/:id	 Deletar usuário do sistema por ID	    200
 EXEMPLO DE PUT
 {   
   "name": "Marisa Silva"
+  
   "email": "maria.teste@email.com
+
   "role": "admin"
+  
   "descripiton": "Agora sou adiministrador da AlimConnect"
+  
 }   
 
 Banco de Dados
