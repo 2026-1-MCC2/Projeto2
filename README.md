@@ -35,22 +35,41 @@ A solução busca otimizar a experiência do usuário, facilitar a gestão de pr
 
 ## 🛠 Estrutura de massas AINDA ARRUMAR
 
--Raiz 
-|<br>
-|-->documentos<br>
-  |-->antigos<br>
-  |Documentação.docx<br>
-|-->executáveis<br>
-  |-->janelas<br>
-  |-->android<br>
-  |-->HTML<br>
-|-->imagens<br>
-|-->src<br>
-  |-->Backend<br>
-  |-->Frontend<br>
-|readme.md<br>
-
-<b>README.MD</b>: Arquivo que serve como guia e explicação geral sobre seu projeto. O mesmo que você está lendo agora.
+```
+Projeto2/
+├── 📂 Documentos/
+│   └── 📂 Entrega 1/
+│       ├── Cálculo 2
+│       ├── Desenvolvimento Web Full Stack
+│       ├── Gestão Empresarial e Dinâmica das Organizações
+│       ├── Projeto Interdisciplinar Programação Web
+│       └── Projeto em Banco de Dados
+│
+├── 📂 Backend/
+│   ├── 📂 src/
+│   │   ├── 📂 controllers/
+│   │   │   ├── 📄 imageController.js    # CRUD de imagens no banco
+│   │   │   └── 📄 useController.js      # CRUD de usuários no banco
+│   │   ├── 📄 app.js                    # Prepara as ferramentas
+│   │   ├── 📄 db.js                     # Prepara as ferramentas
+│   │   ├── 📄 routes.js                 # Recebem o pedido do usuário
+│   │   ├── 📄 server.js                 # Inicia o app
+│   │   └── 📄 uploadConfig.js           # Salva o arquivo na pasta antes de registrar no banco
+│   ├── 📄 package.json                  # Servidor pronto para receber dados e arquivos do frontend
+│   └── 📄 package-lock.json
+│
+├── 📂 Frontend/
+│   ├── 📂 Assets/                       # Imagens do projeto
+│   ├── 📄 favoritos.html                # Exibe e gerencia favoritos no navegador
+│   ├── 📄 index.html                    # Exibe produtos, busca, ordena e controla favoritos
+│   ├── 📄 produto.html                  # Exibe produto e adiciona/remove dos favoritos
+│   ├── 📄 script.js                     # Simula login e valida usuário
+│   └── 📄 style.css                     # Define estilo visual da página
+│
+├── 📄 .gitignore
+├── 📄 package-lock.json
+└── 📄 README.md
+```
 ### 📝 Descrição das Pastas:
 
 - **`documentos/`**: AINDA ARRUMAR.
