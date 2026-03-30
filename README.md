@@ -90,7 +90,8 @@ MySQL Server (v8.0 ou superior)
 
 ## 🛠 Instalação AINDA ARRUMAR
 
-1. Clone o repositório:
+1. Clone o repositório: https://github.com/2026-1-MCC2/Projeto2.git
+2. 2. Crie o banco de dados: 
 
 
 
