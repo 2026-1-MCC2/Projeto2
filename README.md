@@ -61,6 +61,12 @@ A solução busca otimizar a experiência do usuário, facilitar a gestão de pr
 -  **`AINDA ARRUMAR`**: AINDA ARRUMAR
 - **`readme.md`**: Este arquivo que você está lendo agora, contendo informações completas sobre o projeto.
 
+## 💻 Configuração para Desenvolvimento 
+
+Postman (para testar as rotas)
+Node.js (v18 ou superior)
+MySQL Server (v8.0 ou superior)
+
 ## 🛠 Instalação AINDA ARRUMAR
 
 <b>Android:</b>
@@ -86,19 +92,6 @@ Coloque o código do prompt de comando se for necessário
 Não há instalação! 
 Encontre o index.html na pasta encontrada e execute-o como uma página WEB (através de algum navegador).
 
-## 💻 Configuração para Desenvolvimento AINDA ARRUMAR
-
-Descreva como instalar todas as dependências para desenvolvimento e como rodar uma suíte de testes automatizada de algum tipo. Se necessário, faça isso para múltiplas plataformas.
-
-Para abrir este projeto você precisa das seguintes ferramentas:
-
--<a href="https://godotengine.org/download">GODOT</a>
-
-```sh
-faça a instalação
-teste npm
-Coloque o código do prompt de comando se for necessário
-```
 
 ## 📋 Licença/Licença AINDA ARRUMAR 
 Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licença CC BY 4.0.
