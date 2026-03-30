@@ -26,43 +26,54 @@ export async function getUserById(req, res) {
         }
         res.json(rows[0])
     } catch {
-        res.status(500).json({ error: 'Erro ao buscar usuário' })
+        res.status(500).json({ error: 'Erro ao buscar usuário do AlimConnect' })
     }
 }
 
-// --- CRIAR USUÁRIO (COM AS MENSAGENS DOS SNACKS) ---
+// --- CRIAR USUÁRIO (VERSÃO ALIMCONNECT / MRTS NUTS) ---
 // POST http://localhost:3000/api/users
 export async function createUser(req, res) {
+    // 1. Recebe os dados do Postman (Certifique-se de enviar name, email, role e description)
     const { name, email, role, description } = req.body
 
-
+    // 2. Validação de campos obrigatórios [cite: 291, 302]
     if (!name || !email || !role) {
-        return res.status(400).json({ error: 'Nome, E-mail e Tipo de Conta (role) são obrigatórios' })
+        return res.status(400).json({ 
+            error: 'Nome, E-mail e Tipo de Conta (role) são obrigatórios.' 
+        })
     }
 
     try {
+        // 3. Insere no Banco de Dados [cite: 178]
         const [result] = await pool.query(
             'INSERT INTO users (name, email, role, description) VALUES (?,?,?,?)',
-            [name, email, role, description]
+            [name, email, role, description || null]
         )
 
         let siteMessage = ''
-        const firstName = name.split(' ')[0]
+        const firstName = name.split(' ')[0] // Extrai o primeiro nome para a mensagem
 
+        // 4. Lógica de mensagens personalizadas (IGUAL À IMAGEM, MAS DINÂMICA)
         if (role === 'comprador') {
             siteMessage = `Olá ${firstName}! Complete seu cadastro para comprar sua Batata Chips Artesanal (R$ 12,00).`
         } else if (role === 'fornecedor') {
             siteMessage = `${firstName}, você tem um novo pedido de 50 unidades de Amendoim Pimenta e Limão.`
         } else if (role === 'admin') {
             siteMessage = `Alerta: Novo usuário (${name}) cadastrado na plataforma AlimConnect.`
+        } else {
+            siteMessage = `Bem-vindo ao AlimConnect, ${firstName}!`
         }
 
+        // 5. Retorna Sucesso Status 201 [cite: 174, 196]
         res.status(201).json({ id: result.insertId, message: siteMessage })
+        
     } catch (err) {
         if (err.code === 'ER_DUP_ENTRY') {
-            return res.status(409).json({ error: 'Este e-mail já está em uso no sistema da MRTS Nuts / AlimConnect.' })
+            return res.status(409).json({ 
+                error: 'Este e-mail já está em uso no sistema da MRTS Nuts / AlimConnect.' 
+            })
         }
-        res.status(500).json({ error: 'Erro ao criar usuário.' })
+        res.status(500).json({ error: 'Erro ao criar usuário no AlimConnect.' })
     }
 }
 
@@ -83,7 +94,7 @@ export async function updateUser(req, res) {
         )
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Usuário não encontrado' })
+            return res.status(404).json({ error: 'Usuário não encontrado no AlimConnect' })
         }
 
         const [rows] = await pool.query(
@@ -95,7 +106,7 @@ export async function updateUser(req, res) {
         if (err.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ error: 'Email já cadastrado em outra conta' })
         }
-        res.status(500).json({ error: 'Erro ao atualizar usuário' })
+        res.status(500).json({ error: 'Erro ao atualizar usuário dentro do AlimConnect' })
     }
 }
 
@@ -109,10 +120,10 @@ export async function deleteUser(req, res) {
             [id]
         )
         if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Usuário não encontrado!' })
+            return res.status(404).json({ error: 'Usuário AlimConnect não encontrado!' })
         }
         res.json({ message: 'Usuário excluído com sucesso da AlimConnect' })
     } catch {
-        res.status(500).json({ error: 'Erro ao excluir usuário' })
+        res.status(500).json({ error: 'Erro ao excluir usuário AlimConnect' })
     }
 }
