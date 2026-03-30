@@ -18,7 +18,7 @@ Veja tutoriais do PI.
 
 ## Professores Orientadores: <a href="https://www.linkedin.com/in/victorbarq/">Cristina Machado Correa Leite</a>, <a href="https://www.linkedin.com/in/victorbarq/">David De Oliveira Lemes</a>, <a href="https://www.linkedin.com/in/victorbarq/">Francisco de Souza Escobar</a>, <a href="https://www.linkedin.com/in/victorbarq/">Jesus De Lisboa Gomes</a>, <a href="https://www.linkedin.com/in/victorbarq/">Katia Milani Lara Bossi</a>
 
-## Descrição AINDA ARRUMAR
+## Descrição
 
 <p align="center">
 <img src="frontend/assets/Imagem__Logo_AlimConnect.png" alt="Logotipo da AlimConnct" border="0">
@@ -33,7 +33,7 @@ Neste projeto, a AlimConnect foi contratada pela Mr. Nut para desenvolver uma pl
 A solução busca otimizar a experiência do usuário, facilitar a gestão de produtos por parte dos fornecedores e fortalecer a presença digital da empresa contratante.
 <br><br>
 
-## 🛠 Estrutura de massas AINDA ARRUMAR
+## 🛠 Estrutura de massas
 
 ```
 Projeto2/
