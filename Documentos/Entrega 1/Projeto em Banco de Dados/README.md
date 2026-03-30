@@ -37,3 +37,6 @@ Table Itens_Pedidos {
   Quantidade int
   Preco_Unitario decimal(10,2) // Valor histórico da venda
 }
+
+<img width="704" height="389" alt="Captura de tela 2026-03-30 094747" src="https://github.com/user-attachments/assets/d2f3fda1-272c-4b9e-b795-20f83fd3453a" />
+
