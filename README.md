@@ -64,7 +64,9 @@ A solução busca otimizar a experiência do usuário, facilitar a gestão de pr
 ## 💻 Configuração para Desenvolvimento 
 
 Postman (para testar as rotas)
+
 Node.js (v18 ou superior)
+
 MySQL Server (v8.0 ou superior)
 
 ## 🛠 Instalação AINDA ARRUMAR
