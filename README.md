@@ -72,13 +72,17 @@ Projeto2/
 ```
 ### 📝 Descrição das Pastas:
 
-- **`documentos/`**: AINDA ARRUMAR.
-- **`AINDA ARRUMAR/`**: AINDA ARRUMAR.
--  **`AINDA ARRUMAR/`**: AINDA ARRUMAR.
-- **`AINDA ARRUMAR/`**: AINDA ARRUMAR.
-- **`AINDA ARRUMAR`**: AINDA ARRUMAR.
--  **`AINDA ARRUMAR`**: AINDA ARRUMAR
-- **`readme.md`**: Este arquivo que você está lendo agora, contendo informações completas sobre o projeto.
+- **`Documentos/`**: Centraliza a documentação do projeto e as entregas das disciplinas do semestre, organizadas cronologicamente.
+- **`Backend/`**: Contém o código-fonte da API REST desenvolvida em Node.js e Express, além de toda a lógica de servidor e arquivos internos.
+-  **`Frontend/`**: Reúne todos os arquivos de interface, componentes e recursos visuais do projeto..
+- **`Readme.md`**: Este arquivo que você está lendo agora, contendo informações completas sobre o projeto.
+  
+
+## 🗄 Banco de Dados: Arquivo Inicial
+
+Abaixo, disponibilizamos o link para a modelagem do banco de dados. Vale ressaltar que a estrutura ainda está em desenvolvimento, por este motivo, as informações constam apenas no arquivo README.md do projeto.
+
+* [Modelagem do Banco de Dados](./Documentos/Entrega%201/Projeto%20em%20Banco%20de%20Dados/README.md)
 
 ## 💻 Configuração para Desenvolvimento 
 
@@ -165,17 +169,14 @@ Banco de Dados
 
     Itens_Pedidos — Tabela intermediária que detalha os produtos de cada pedido (Quantidade e Valor)
   
-## 📋 Licença/Licença AINDA ARRUMAR 
+## 📋 Licença/Licença
 Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licença CC BY 4.0.
 
-## 🎓 Referências AINDA PREENCHER
+## 🎓 Referências 
 
 Aqui estão as referências usadas no projeto.
 
 1. <https://github.com/iuricode/readme-template>
 2. <https://github.com/gabrieldejesus/readme-model>
 3. <https://chooser-beta.creativecommons.org/>
-4. <https://freesound.org/>
-5. <https://www.toptal.com/developers/gitignore>
-6. Músicas de: <a href="https://freesound.org/people/DaveJf/sounds/616544/"> DaveJf </a> e <a href="https://freesound.org/people/DRFX/sounds/338986/"> DRFX </a> ambas com Licença CC 0.
-* [Modelagem do Banco de Dados](./Documentos/Entrega%201/Projeto%20em%20Banco%20de%20Dados/README.md)
+4. <https://www.toptal.com/developers/gitignore>
