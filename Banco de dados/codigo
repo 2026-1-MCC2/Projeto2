@@ -26,3 +26,5 @@ CREATE TABLE products (
     supplier_id INT,
     FOREIGN KEY (supplier_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- 4. Cria a tabela da aba de itens favoritos
