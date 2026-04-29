@@ -5,6 +5,10 @@ import path from 'path'
 
 const app = express()
 
+app.get('/', (req, res) => {
+    res.send('🚀 AlimConnect API está rodando')
+  })
+  
 app.use(cors()) // Permite que o Front-end acesse a API
 app.use(express.json())
 
