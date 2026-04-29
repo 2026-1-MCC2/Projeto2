@@ -72,9 +72,14 @@ export async function getUsers(_, res) {
         res.json(rows);
     } catch (err) {
         console.error('Erro em getUsers:', err);
-        res.status(500).json({ error: 'Erro ao listar usuários.' });
+        res.status(500).json({
+            error: 'Erro ao listar usuários.',
+            details: err.message,
+            code: err.code
+        });
     }
 }
+
 
 
 
