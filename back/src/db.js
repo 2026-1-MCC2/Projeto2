@@ -1,5 +1,9 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
+import path from 'path'
 import mysql from 'mysql2/promise'
+
+// Garante que o Node vai achar o .env na raiz da pasta 'back'
+dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 export const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,

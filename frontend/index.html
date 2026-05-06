@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlimConect - Mercado B2B</title>
+    <title>AlimConnect - Mercado B2B</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -12,14 +12,47 @@
         :root { --bege: #F5F5DC; --laranja-claro: #FFCC80; --marrom-texto: #5D4037; }
         #sugestoes-busca::-webkit-scrollbar { width: 6px; }
         #sugestoes-busca::-webkit-scrollbar-thumb { background: #FFCC80; border-radius: 10px; }
+        
+        .page { display: none; }
+        .page.active { display: block; }
+        .msg { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 13px; display: none; }
+        .msg.ok { background: #e8f5ee; color: #1a5c35; display: block; }
+        .msg.err { background: #fdeaea; color: #8b1a1a; display: block; }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Notificação Toast Flutuante */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #5D4037;
+            color: #ffffff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-[#FAF9F6] text-slate-900">
 
     <header class="flex items-center justify-between px-6 py-4 bg-white border-b sticky top-0 z-50">
-        <div class="flex items-center gap-2 text-[#5D4037]">
+        <div class="flex items-center gap-2 text-[#5D4037] cursor-pointer" onclick="goToPage('home')">
             <span class="material-symbols-outlined text-[#FFCC80]">nutrition</span>
-            <span class="text-xl font-extrabold tracking-tight">AlimConect</span>
+            <span class="text-xl font-extrabold tracking-tight">AlimConnect</span>
         </div>
 
         <div class="hidden lg:flex relative w-1/3">
@@ -31,11 +64,12 @@
         </div>
 
         <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600">
-            <a href="#" class="hover:text-[#5D4037]">Início</a>
-            <a href="#sobre" class="hover:text-[#5D4037]">Quem Somos</a>
-            <a href="#produtos" class="hover:text-[#5D4037]">Produtos</a>
-            <a href="#contato" class="hover:text-[#5D4037]">Contato</a>
-            <a href="#login" class="bg-[#5D4037] text-white px-4 py-2 rounded-lg hover:bg-[#4a332c] transition">Acessar Portal</a>
+            <a href="javascript:void(0)" onclick="goToPage('home')" class="hover:text-[#5D4037]">Início</a>
+            <a href="javascript:void(0)" onclick="goToPage('home'); setTimeout(() => document.getElementById('produtos').scrollIntoView(), 100)" class="hover:text-[#5D4037]">Produtos</a>
+            <a href="quem-somos.html" class="hover:text-[#5D4037]">Quem Somos</a>
+            <a href="contato.html" class="hover:text-[#5D4037]">Contato</a>
+            
+            <a href="javascript:void(0)" id="btn-portal" onclick="handlePortalClick()" class="bg-[#5D4037] text-white px-4 py-2 rounded-lg hover:bg-[#4a332c] transition">Acessar Portal</a>
 
             <a href="favoritos.html" class="relative text-slate-600 hover:text-red-500 transition-colors">
                 <span class="material-symbols-outlined text-3xl">favorite</span>
@@ -44,7 +78,7 @@
         </nav>
     </header>
 
-    <main>
+    <main id="page-home" class="page active">
         <section class="relative px-6 py-24 md:py-40 text-center overflow-hidden">
             <div class="absolute inset-0 z-0">
                 <img src="assets/banner.png" class="w-full h-full object-cover" alt="Banner">
@@ -75,7 +109,140 @@
         </section>
     </main>
 
+    <section id="page-auth" class="page px-6 py-16">
+        <div class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-sm border">
+            
+            <div class="flex flex-col items-center mb-8">
+                <img src="assets/logo.png" alt="AlimConnect Logo" class="w-24 h-24 object-contain mb-2 fallback-logo" onerror="this.style.display='none'; document.getElementById('text-logo').classList.remove('hidden')">
+                <div id="text-logo" class="hidden text-center">
+                    <span class="material-symbols-outlined text-4xl text-[#FFCC80]">nutrition</span>
+                </div>
+                <h2 class="text-xl font-extrabold text-[#5D4037] mt-1">AlimConnect</h2>
+                <p class="text-xs text-slate-400 font-mono">localhost:3000</p>
+            </div>
+
+            <div class="flex bg-slate-100 p-1 rounded-xl mb-6">
+                <button onclick="switchTab('login')" id="tab-l" class="flex-1 py-2 rounded-lg font-bold text-sm bg-white text-[#5D4037] shadow-sm transition-all">Login</button>
+                <button onclick="switchTab('register')" id="tab-r" class="flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-600 transition-all">Registrar</button>
+            </div>
+
+            <div id="form-login" class="space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">E-mail</label>
+                    <input type="email" id="login-email" placeholder="ana@teste.com" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">Senha</label>
+                    <input type="password" id="login-password" placeholder="Senha123" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm" onkeydown="if(event.key==='Enter')doLogin()">
+                </div>
+                
+                <button onclick="doLogin()" id="btn-login" class="w-full bg-[#5D4037] text-white py-3 rounded-xl font-bold hover:bg-[#4a332c] transition flex items-center justify-center">Entrar</button>
+                <div id="msg-login" class="msg"></div>
+
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-slate-200"></div>
+                    <span class="flex-shrink mx-4 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Esqueceu a Senha?</span>
+                    <div class="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">E-mail</label>
+                        <input type="email" id="reset-email" placeholder="ana@teste.com" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">Nova Senha</label>
+                        <input type="password" id="reset-password" placeholder="NovaSenha123" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                    </div>
+                    <button onclick="doResetPassword()" id="btn-reset" class="w-full bg-slate-200 text-[#5D4037] py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-300 transition flex items-center justify-center">Redefinir a Senha</button>
+                    <div id="msg-reset" class="msg"></div>
+                </div>
+            </div>
+
+            <div id="form-register" class="hidden space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">Nome</label>
+                    <input type="text" id="register-name" placeholder="Ana" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">E-mail</label>
+                    <input type="email" id="register-email" placeholder="ana@teste.com" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">Senha</label>
+                    <input type="password" id="register-password" placeholder="Senha123" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1 tracking-wider">Tipo de Conta</label>
+                    <select id="register-role" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm cursor-pointer font-semibold text-slate-700">
+                        <option value="comprador">Quero Comprar (Comprador)</option>
+                        <option value="fornecedor">Quero Vender (Fornecedor)</option>
+                    </select>
+                </div>
+                <button onclick="doRegister()" id="btn-register" class="w-full bg-[#5D4037] text-white py-3 rounded-xl font-bold hover:bg-[#4a332c] transition flex items-center justify-center">Criar Conta</button>
+                <div id="msg-register" class="msg"></div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-100 text-center space-y-3">
+                <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Canais de Atendimento</p>
+                <div class="grid grid-cols-2 gap-4 text-left">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-[10px] font-bold text-[#FFCC80] uppercase block mb-0.5">Compradores (Público)</span>
+                        <a href="mailto:compras@alimconnect.com.br" class="text-xs font-semibold text-[#5D4037] hover:underline block break-all">compras@alimconnect.com.br</a>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 relative overflow-hidden" id="box-fornecedor">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Fornecedores (Privado)</span>
+                        
+                        <div id="email-fornecedor-protegido" class="hidden">
+                            <a href="mailto:parceiros@alimconnect.com.br" class="text-xs font-semibold text-[#5D4037] hover:underline block break-all">parceiros@alimconnect.com.br</a>
+                        </div>
+
+                        <div id="email-fornecedor-trava" class="flex items-center gap-1 text-[11px] text-amber-600 font-medium mt-0.5 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100 select-none">
+                            <span class="material-symbols-outlined text-sm">lock</span> Restrito
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="page-dashboard" class="page px-6 py-16 max-w-4xl mx-auto">
+        <div class="bg-white p-8 rounded-3xl border shadow-sm mb-6 flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-black text-[#5D4037]" id="dash-name">Carregando...</h2>
+                <p class="text-slate-500 text-sm" id="dash-email">...</p>
+            </div>
+            <button onclick="doLogout()" class="text-red-500 font-bold border border-red-500 px-4 py-2 rounded-lg hover:bg-red-50 transition">Sair da Conta</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                <h3 class="font-bold text-[#5D4037] mb-4 border-b pb-2">Atualizar Perfil</h3>
+                <div class="mb-3">
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Novo Nome</label>
+                    <input type="text" id="update-name" placeholder="Novo nome" class="w-full p-2.5 bg-slate-50 border rounded-lg outline-none text-sm">
+                </div>
+                <button onclick="doUpdateName()" id="btn-update-name" class="bg-[#5D4037] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#4a332c]">Salvar Nome</button>
+                <div id="msg-update-name" class="msg"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                <h3 class="font-bold text-red-600 mb-4 border-b pb-2">Zona de Perigo</h3>
+                <p class="text-xs text-slate-500 mb-4">A exclusão desativará permanentemente o acesso da sua conta à plataforma AlimConnect.</p>
+                <button onclick="doDeleteAccount()" id="btn-delete-me" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-100 transition">Excluir minha conta</button>
+                <div id="msg-delete-me" class="msg"></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="toast-welcome" class="toast-notification">
+        <span class="material-symbols-outlined text-[#FFCC80]">celebration</span>
+        <span>Olá, <span id="toast-user-name"></span>! Bem-vindo de volta.</span>
+    </div>
+
     <script>
+        /* --- PRODUTOS --- */
         const produtos = [
             { id: 'amendoim', nome: 'Amendoim Pimenta e Limão', foto: 'assets/amendoim.png', foto2: 'assets/amendoimpimenta.png', preco: 8.50 },
             { id: 'batata', nome: 'Batata Chips Artesanal', foto: 'assets/batata.png', foto2: 'assets/batataprato.png', preco: 12.00 },
@@ -147,6 +314,200 @@
                 }
             } else { listaSugestoes.classList.add('hidden'); }
         });
+
+        /* --- SCRIPT BACKEND INTEGRADO --- */
+        const BASE = 'http://localhost:3000/api';
+        let token = null;
+        let currentUser = null;
+
+        function goToPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function handlePortalClick() {
+            if (token) goToPage('dashboard');
+            else goToPage('auth');
+        }
+
+        function switchTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('form-login').classList.toggle('hidden', !isLogin);
+            document.getElementById('form-register').classList.toggle('hidden', isLogin);
+            
+            if(isLogin) {
+                document.getElementById('tab-l').className = 'flex-1 py-2 rounded-lg font-bold text-sm bg-white text-[#5D4037] shadow-sm transition-all';
+                document.getElementById('tab-r').className = 'flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-600 transition-all';
+            } else {
+                document.getElementById('tab-l').className = 'flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-600 transition-all';
+                document.getElementById('tab-r').className = 'flex-1 py-2 rounded-lg font-bold text-sm bg-white text-[#5D4037] shadow-sm transition-all';
+            }
+        }
+
+        UX_showMsg = function(id, text, type) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.textContent = text;
+                el.className = 'msg ' + type;
+            }
+        }
+        if (typeof showMsg === 'undefined') { var showMsg = UX_showMsg; }
+
+        function setLoading(id, on) {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            if (on) {
+                btn.disabled = true;
+                btn.dataset.orig = btn.innerHTML;
+                btn.innerHTML = '<span class="spinner"></span> Aguarde...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.orig || 'Enviar';
+            }
+        }
+
+        async function api(path, opts = {}) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            try {
+                const res = await fetch(BASE + path, { ...opts, headers });
+                const data = await res.json();
+                return { ok: res.ok, data };
+            } catch (err) {
+                return { ok: false, data: { error: 'Não foi possível conectar ao servidor backend.' } };
+            }
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const senha = document.getElementById('login-password').value; 
+            if(!email || !senha) { showMsg('msg-login', 'Preencha todos os campos.', 'err'); return; }
+            
+            setLoading('btn-login', true);
+            const { ok, data } = await api('/login', { method:'POST', body: JSON.stringify({email, senha}) });
+            setLoading('btn-login', false);
+            
+            if (ok) {
+                token = 'mock-token-jwt'; 
+                currentUser = data.user;
+                document.getElementById('btn-portal').textContent = 'Meu Perfil';
+                document.getElementById('dash-name').textContent = currentUser.name;
+                document.getElementById('dash-email').textContent = currentUser.email;
+
+                // CONTROLE DE PRIVACIDADE DO E-MAIL:
+                if (currentUser.role === 'comprador') {
+                    document.getElementById('email-fornecedor-protegido').classList.remove('hidden');
+                    document.getElementById('email-fornecedor-trava').classList.add('hidden');
+                } else {
+                    document.getElementById('email-fornecedor-protegido').classList.add('hidden');
+                    document.getElementById('email-fornecedor-trava').classList.remove('hidden');
+                }
+
+                // Redireciona para a Home
+                goToPage('home');
+
+                // DISPARA O RECADO TEMPORÁRIO NA TELA (TOAST)
+                const toast = document.getElementById('toast-welcome');
+                document.getElementById('toast-user-name').textContent = currentUser.name;
+                
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 300);
+
+                // Remove a notificação da tela após 4 segundos
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4300);
+
+            } else {
+                showMsg('msg-login', data.error || 'Credenciais inválidas.', 'err');
+            }
+        }
+
+        async function doRegister() {
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const senha = document.getElementById('register-password').value;
+            const role = document.getElementById('register-role').value;
+            
+            if(!name || !email || !senha) { showMsg('msg-register', 'Preencha todos os campos.', 'err'); return; }
+            
+            setLoading('btn-register', true);
+            
+            const { ok, data } = await api('/users', { 
+                method: 'POST', 
+                body: JSON.stringify({ name, email, senha, role, description: '' }) 
+            });
+            
+            setLoading('btn-register', false);
+            
+            if (ok) {
+                showMsg('msg-register', data.message || 'Conta criada com sucesso! Redirecionando para login...', 'ok');
+                setTimeout(() => {
+                    switchTab('login');
+                    document.getElementById('login-email').value = email;
+                }, 1500);
+            } else {
+                showMsg('msg-register', data.error || 'Erro ao registrar usuário.', 'err');
+            }
+        }
+
+        async function doResetPassword() {
+            const email = document.getElementById('reset-email').value.trim();
+            const password = document.getElementById('reset-password').value;
+            if(!email || !password) { showMsg('msg-reset', 'Preencha e-mail e nova senha.', 'err'); return; }
+
+            setLoading('btn-reset', true);
+            const { ok, data } = await api('/auth/reset-password', { method:'POST', body: JSON.stringify({email, senha: password}) });
+            setLoading('btn-reset', false);
+
+            if(ok) {
+                showMsg('msg-reset', 'Senha redefinida com sucesso!', 'ok');
+                document.getElementById('login-email').value = email;
+            } else {
+                showMsg('msg-reset', data.error || 'Erro ao redefinir senha.', 'err');
+            }
+        }
+
+        async function doLogout() {
+            token = null;
+            currentUser = null;
+            document.getElementById('btn-portal').textContent = 'Acessar Portal';
+            
+            // Ao sair, bloqueia novamente o e-mail privado
+            document.getElementById('email-fornecedor-protegido').classList.add('hidden');
+            document.getElementById('email-fornecedor-trava').classList.remove('hidden');
+            
+            goToPage('home');
+        }
+
+        async function doUpdateName() {
+            const name = document.getElementById('update-name').value.trim();
+            if(!name) return;
+            setLoading('btn-update-name', true);
+            const { ok, data } = await api('/users/me', { method:'PUT', body: JSON.stringify({name}) });
+            setLoading('btn-update-name', false);
+            if (ok) {
+                currentUser.name = name;
+                document.getElementById('dash-name').textContent = name;
+                showMsg('msg-update-name', 'Nome updated!', 'ok');
+            } else {
+                showMsg('msg-update-name', data.error || 'Erro ao atualizar.', 'err');
+            }
+        }
+
+        async function doDeleteAccount() {
+            if(!confirm('Deseja mesmo excluir sua conta permanentemente?')) return;
+            setLoading('btn-delete-me', true);
+            const { ok } = await api('/users/' + currentUser.id, { method:'DELETE' });
+            setLoading('btn-delete-me', false);
+            if (ok) {
+                doLogout();
+            } else {
+                showMsg('msg-delete-me', 'Erro ao excluir conta.', 'err');
+            }
+        }
 
         render(produtos);
         atualizarContador();
