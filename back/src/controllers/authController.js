@@ -1,35 +1,39 @@
 import { pool } from '../db.js';
 import bcrypt from 'bcrypt';
+import { generateToken } from '../services/tokenService.js'; // Ajustado para generateToken
 
+// --- LOGIN (Já ajustado para o padrão real) ---
 export async function login(req, res) {
     const { email, senha } = req.body;
 
-    // 1. Validação básica
     if (!email || !senha) {
         return res.status(400).json({ error: 'E-mail e senha são obrigatórios.' });
     }
 
     try {
-        // 2. Busca o usuário pelo e-mail
         const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-        
+
         if (rows.length === 0) {
             return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
         }
 
         const user = rows[0];
-
-        // 3. Compara a senha digitada com a senha criptografada do banco
         const senhaValida = await bcrypt.compare(senha, user.senha);
 
         if (!senhaValida) {
             return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
         }
 
-        // 4. Se deu tudo certo, retorna os dados do usuário (exceto a senha)
-        // Aqui no futuro você pode gerar um Token JWT
+        // Gera o token real (O service novo já cuida do JTI internamente)
+        const token = generateToken({ 
+            id: user.id, 
+            role: user.role, 
+            email: user.email 
+        });
+
         res.json({
             message: `Bem-vindo de volta, ${user.name.split(' ')[0]}!`,
+            token,
             user: {
                 id: user.id,
                 name: user.name,
@@ -39,6 +43,43 @@ export async function login(req, res) {
         });
 
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: 'Erro ao processar o login.' });
+    }
+}
+
+// --- LOGOUT (Resolve o erro da rota faltando) ---
+export async function logout(req, res) {
+    try {
+        // No JWT, o logout principal é limpar o localStorage no Front.
+        // Aqui no Back, confirmamos que a sessão foi encerrada.
+        res.json({ message: 'Logout realizado com sucesso!' });
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao realizar logout.' });
+    }
+}
+
+// --- RESET PASSWORD (Resolve o erro da rota faltando) ---
+export async function resetPassword(req, res) {
+    const { email, novaSenha } = req.body;
+
+    if (!email || !novaSenha) {
+        return res.status(400).json({ error: 'E-mail e nova senha são obrigatórios.' });
+    }
+
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(novaSenha, salt);
+
+        const [result] = await pool.query('UPDATE users SET senha = ? WHERE email = ?', [hash, email]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+
+        res.json({ message: 'Senha atualizada com sucesso!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao resetar senha.' });
     }
 }
