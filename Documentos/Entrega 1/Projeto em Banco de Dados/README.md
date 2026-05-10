@@ -1,4 +1,4 @@
-As tabelas criadas para o sistema de e‑commerce foram: Usuarios, Pedidos, Produtos, Itens_Pedidos, Favoritos e Avaliacoes_Produtos.
+As tabelas criadas para o sistema do marketplace foram: Usuarios, Pedidos, Produtos, Itens_Pedidos, Favoritos e Avaliacoes_Produtos.
 A tabela Usuarios possui uma chave primária que garante a unicidade de cada cadastro, evitando a duplicidade de registros e assegurando a organização do histórico de compras e interações dos usuários no sistema.
 A tabela Pedidos contém uma chave primária para identificar cada pedido de forma única e uma chave estrangeira que estabelece o relacionamento com a tabela Usuarios, permitindo associar cada pedido ao respectivo usuário responsável pela compra.
 A tabela Itens_Pedidos segue a mesma lógica, possuindo uma chave primária para identificação individual dos itens e chaves estrangeiras que a conectam às tabelas Pedidos e Produtos. Essa estrutura garante a integridade dos dados relacionados às vendas, armazenando inclusive o preço praticado no momento exato da transação, preservando o histórico comercial.
