@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato - AlimConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#FAF9F6]">
+
+    <header class="flex items-center justify-between px-10 py-4 bg-white border-b sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#FFCC80] text-3xl font-bold">nutrition</span>
+            <span class="text-xl font-extrabold text-[#5D4037] tracking-tight">AlimConnect</span>
+        </div>
+    
+        <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600">
+            <a href="index.html" class="hover:text-[#5D4037]">Início</a>
+            <a href="index.html#produtos" class="hover:text-[#5D4037]">Produtos</a>
+            <a href="quem-somos.html" class="hover:text-[#5D4037]">Quem Somos</a>
+            <a href="contato.html" class="text-[#5D4037] border-b-2 border-[#FFCC80]">Contato</a>
+            
+            <a href="dashboard.html" id="btn-portal" class="bg-[#5D4037] text-white px-4 py-2 rounded-lg hover:bg-[#4a332c] transition">Acessar Portal</a>
+    
+            <a href="favoritos.html" class="relative text-slate-600 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined text-3xl">favorite</span>
+                <span id="contador-favoritos" class="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full size-5 flex items-center justify-center">0</span>
+            </a>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-10 grid grid-cols-1 md:grid-cols-2 gap-16 mt-10">
+        
+        <div class="space-y-8">
+            <h1 class="text-5xl font-black text-[#5D4037] mb-6">Contato</h1>
+            
+            <div class="space-y-8 text-slate-700">
+                <div class="flex items-center gap-5">
+                    <span class="material-symbols-outlined text-[#FFCC80] text-3xl">chat</span>
+                    <span class="font-bold text-lg">5519974086109</span>
+                </div>
+                <div class="flex items-center gap-5">
+                    <span class="material-symbols-outlined text-[#FFCC80] text-3xl">smartphone</span>
+                    <span class="font-bold text-lg">(19) 97408-6109</span>
+                </div>
+                <div class="flex items-center gap-5">
+                    <span class="material-symbols-outlined text-[#FFCC80] text-3xl">mail</span>
+                    <span class="font-bold text-lg text-[#5D4037]">contato@alimconnect.com.br</span>
+                </div>
+                <div class="flex items-start gap-5">
+                    <span class="material-symbols-outlined text-[#FFCC80] text-3xl">location_on</span>
+                    <span class="font-bold text-lg leading-snug">
+                        Estrada Municipal do Capuava - Valinhos - SP<br>
+                        CEP: 13272-185
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 space-y-8">
+            <div>
+                <label class="block text-sm font-bold text-[#5D4037] mb-3 uppercase tracking-widest">Nome</label>
+                <input type="text" id="nome" placeholder="ex.: Maria Perez" 
+                       class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition text-slate-600">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-[#5D4037] mb-3 uppercase tracking-widest">E-mail</label>
+                <input type="email" id="email" placeholder="ex.: seuemail@email.com.br" 
+                       class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition text-slate-600">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-[#5D4037] mb-3 uppercase tracking-widest">Telefone</label>
+                <input type="text" id="tel" placeholder="ex.: 11971923030" 
+                       class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition text-slate-600">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-[#5D4037] mb-3 uppercase tracking-widest">Mensagem</label>
+                <textarea id="msg" placeholder="ex.: Sua mensagem" rows="4" 
+                          class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition resize-none text-slate-600"></textarea>
+            </div>
+
+            <button onclick="enviarMensagem()" class="w-full bg-[#5D4037] text-white py-5 rounded-2xl font-black text-xl hover:bg-[#4a332c] transition shadow-xl transform active:scale-95">
+                ENVIAR MENSAGEM
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // Função para simular o envio via WhatsApp
+        function enviarMensagem() {
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const tel = document.getElementById('tel').value;
+            const msg = document.getElementById('msg').value;
+
+            if(!nome || !msg) {
+                alert("Por favor, preencha pelo menos seu nome e a mensagem.");
+                return;
+            }
+
+            const texto = `Olá AlimConnect! Me chamo ${nome}.%0A%0A*E-mail:* ${email}%0A*Telefone:* ${tel}%0A*Mensagem:* ${msg}`;
+            const numero = "5519974086109"; 
+
+            window.open(`https://api.whatsapp.com/send?phone=${numero}&text=${texto}`, '_blank');
+        }
+
+        // Função do contador de favoritos
+        function atualizarContadorHeader() {
+            const favs = JSON.parse(localStorage.getItem('favoritosAlim')) || [];
+            const cont = document.getElementById('contador-favoritos');
+            if(cont) {
+                cont.innerText = favs.length;
+                cont.style.display = favs.length > 0 ? 'flex' : 'none';
+            }
+        }
+        
+        // Executa ao carregar a página
+        atualizarContadorHeader();
+    </script>
+</body>
+</html>

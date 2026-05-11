@@ -10,7 +10,7 @@
 </head>
 <body class="bg-[#FAF9F6]">
     <header class="flex items-center justify-between px-10 py-4 bg-white border-b sticky top-0 z-50">
-        <a href="index.html" class="text-[#5D4037] font-bold underline">← Voltar para o Início</a>
+        <a href="index.html" class="text-[#5D4037] font-bold">← Voltar para o Início</a>
         <a href="favoritos.html" class="relative text-slate-600 hover:text-red-500 transition-colors">
             <span class="material-symbols-outlined text-3xl">favorite</span>
             <span id="contador-favoritos" class="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full size-5 flex items-center justify-center">0</span>
@@ -47,15 +47,15 @@
     </div>
 
     <script>
-        const db = {
-            'amendoim': { id: 'amendoim', nome: "Amendoim Pimenta e Limão", foto: "assets/amendoim.png", foto2: "assets/amendoimpimenta.png", preco: 8.50 },
-            'batata': { id: 'batata', nome: "Batata Chips Artesanal", foto: "assets/batata.png", foto2: "assets/batataprato.png", preco: 12.00 },
-            'biscoito': { id: 'biscoito', nome: "Biscoitos de Polvilho", foto: "assets/biscoito.png", foto2: "assets/biscoitonoprat.png", preco: 6.90 },
-            'castanha': { id: 'castanha', nome: "Castanha de Caju Premium", foto: "assets/castanhas.png", foto2: "assets/castanhasnopr.png", preco: 15.00 },
-            'mix-castanhas': { id: 'mix-castanhas', nome: "Mix de Castanhas Mistas", foto: "assets/castanhasmistas.png", foto2: "assets/castanhaspremiumnoprat.png", preco: 18.50 },
-            'milho': { id: 'milho', nome: "Snacks de Milho Torrado", foto: "assets/milho.png", foto2: "assets/milhoprato.png", preco: 7.50 },
-            'pretzel': { id: 'pretzel', nome: "Pretzel Salgado Tradicional", foto: "assets/pretzel.png", foto2: "assets/pretzelprato1.png", preco: 9.00 }
-        };
+     const db = {
+    'amendoim': { id: 'amendoim', nome: "Amendoim Pimenta e Limão", foto: "assets/amendoim.png", foto2: "assets/amendoimpimenta.png", preco: 8.50 },
+    'batata': { id: 'batata', nome: "Batata Chips Artesanal", foto: "assets/batata.png", foto2: "assets/batataprato.png", preco: 12.00 },
+    'biscoito': { id: 'biscoito', nome: "Biscoitos de Polvilho", foto: "assets/biscoito.png", foto2: "assets/biscoitonoprato.png", preco: 6.90 },
+    'castanha': { id: 'castanha', nome: "Castanha de Caju Premium", foto: "assets/castanhas.png", foto2: "assets/castanhasnoprato.png", preco: 15.00 },
+    'mix-castanhas': { id: 'mix-castanhas', nome: "Mix de Castanhas Mistas", foto: "assets/castanhasmistas.png", foto2: "assets/castanhaspremiumnoprato.png", preco: 18.50 },
+    'milho': { id: 'milho', nome: "Snacks de Milho Torrado", foto: "assets/milho.png", foto2: "assets/milhoprato.png", preco: 7.50 },
+    'pretzel': { id: 'pretzel', nome: "Pretzel Salgado Tradicional", foto: "assets/pretzel.png", foto2: "assets/pretzelprato1.png", preco: 9.00 }
+};
 
         const params = new URLSearchParams(window.location.search);
         const prodId = params.get('item');

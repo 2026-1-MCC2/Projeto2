@@ -3,8 +3,13 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import routes from './routes.js'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
-dotenv.config() // <-- adiciona isso antes de tudo
+// Configurações de caminho para módulos ES
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+dotenv.config()
 
 const app = express()
 
@@ -16,6 +21,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', routes)
-app.use('/uploads', express.static(path.resolve('uploads')))
+
+// AJUSTE AQUI: Garante que ele ache a pasta uploads na raiz do projeto
+// Se sua pasta 'src' está dentro da raiz, o '..' volta um nível para achar a 'uploads'
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
 export default app

@@ -1,8 +1,8 @@
 import { pool } from '../db.js';
 import bcrypt from 'bcrypt';
-import { generateToken } from '../services/tokenService.js'; // Ajustado para generateToken
+import { generateToken } from '../services/tokenService.js';
 
-// --- LOGIN (Já ajustado para o padrão real) ---
+// --- LOGIN ---
 export async function login(req, res) {
     const { email, senha } = req.body;
 
@@ -24,8 +24,8 @@ export async function login(req, res) {
             return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
         }
 
-        // Gera o token real (O service novo já cuida do JTI internamente)
-        const token = generateToken({ 
+        // O service retorna { token, jti }, pegamos apenas o token para o front
+        const tokenData = generateToken({ 
             id: user.id, 
             role: user.role, 
             email: user.email 
@@ -33,7 +33,7 @@ export async function login(req, res) {
 
         res.json({
             message: `Bem-vindo de volta, ${user.name.split(' ')[0]}!`,
-            token,
+            token: tokenData.token,
             user: {
                 id: user.id,
                 name: user.name,
@@ -48,18 +48,16 @@ export async function login(req, res) {
     }
 }
 
-// --- LOGOUT (Resolve o erro da rota faltando) ---
+// --- LOGOUT ---
 export async function logout(req, res) {
     try {
-        // No JWT, o logout principal é limpar o localStorage no Front.
-        // Aqui no Back, confirmamos que a sessão foi encerrada.
         res.json({ message: 'Logout realizado com sucesso!' });
     } catch (err) {
         res.status(500).json({ error: 'Erro ao realizar logout.' });
     }
 }
 
-// --- RESET PASSWORD (Resolve o erro da rota faltando) ---
+// --- RESET PASSWORD ---
 export async function resetPassword(req, res) {
     const { email, novaSenha } = req.body;
 

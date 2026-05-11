@@ -207,13 +207,47 @@
         </div>
     </section>
 
-    <section id="page-dashboard" class="page px-6 py-16 max-w-4xl mx-auto">
+    <section id="page-dashboard" class="page px-6 py-16 max-w-6xl mx-auto">
         <div class="bg-white p-8 rounded-3xl border shadow-sm mb-6 flex items-center justify-between">
             <div>
                 <h2 class="text-2xl font-black text-[#5D4037]" id="dash-name">Carregando...</h2>
                 <p class="text-slate-500 text-sm" id="dash-email">...</p>
             </div>
             <button onclick="doLogout()" class="text-red-500 font-bold border border-red-500 px-4 py-2 rounded-lg hover:bg-red-50 transition">Sair da Conta</button>
+        </div>
+
+        <div id="painel-fornecedor" class="hidden space-y-6 mb-8">
+            <h3 class="text-xl font-extrabold text-[#5D4037] border-b pb-2">Painel de Gestão de Vendas</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Total de Vendas</span>
+                    <span class="text-2xl font-black text-green-600">R$ 1.450,00</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Pedidos Pendentes</span>
+                    <span class="text-2xl font-black text-orange-500">03</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Produtos Ativos</span>
+                    <span class="text-2xl font-black text-[#5D4037]">12</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Melhor Produto</span>
+                    <span class="text-sm font-bold text-slate-700">Amendoim Pimenta</span>
+                </div>
+            </div>
+
+                <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-[#5D4037] mb-2 font-black">Aba "Meus Produtos"</h4>
+                        <p class="text-xs text-slate-500 mb-4">Gerencie preços, estoque e novos snacks.</p>
+                    </div>
+                    <button class="w-full bg-[#FFCC80] text-[#5D4037] py-3 rounded-xl font-bold hover:bg-[#ffbd5c] transition">
+                        Gerenciar Catálogo
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
@@ -242,7 +276,7 @@
     </div>
 
     <script>
-        /* --- PRODUTOS --- */
+        /* --- PRODUTOS --- (SEU DESIGN MANTIDO) */
         const produtos = [
             { id: 'amendoim', nome: 'Amendoim Pimenta e Limão', foto: 'assets/amendoim.png', foto2: 'assets/amendoimpimenta.png', preco: 8.50 },
             { id: 'batata', nome: 'Batata Chips Artesanal', foto: 'assets/batata.png', foto2: 'assets/batataprato.png', preco: 12.00 },
@@ -395,30 +429,24 @@
                 document.getElementById('dash-name').textContent = currentUser.name;
                 document.getElementById('dash-email').textContent = currentUser.email;
 
-                // CONTROLE DE PRIVACIDADE DO E-MAIL:
+                // CONTROLE DE PRIVACIDADE DO E-MAIL
                 if (currentUser.role === 'comprador') {
                     document.getElementById('email-fornecedor-protegido').classList.remove('hidden');
                     document.getElementById('email-fornecedor-trava').classList.add('hidden');
+                    document.getElementById('painel-fornecedor').classList.add('hidden'); // Oculta painel se for comprador
                 } else {
                     document.getElementById('email-fornecedor-protegido').classList.add('hidden');
                     document.getElementById('email-fornecedor-trava').classList.remove('hidden');
+                    document.getElementById('painel-fornecedor').classList.remove('hidden'); // Mostra painel se for fornecedor
                 }
 
-                // Redireciona para a Home
                 goToPage('home');
 
-                // DISPARA O RECADO TEMPORÁRIO NA TELA (TOAST)
                 const toast = document.getElementById('toast-welcome');
                 document.getElementById('toast-user-name').textContent = currentUser.name;
                 
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 300);
-
-                // Remove a notificação da tela após 4 segundos
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 4300);
+                setTimeout(() => toast.classList.add('show'), 300);
+                setTimeout(() => toast.classList.remove('show'), 4300);
 
             } else {
                 showMsg('msg-login', data.error || 'Credenciais inválidas.', 'err');
@@ -430,26 +458,40 @@
             const email = document.getElementById('register-email').value.trim();
             const senha = document.getElementById('register-password').value;
             const role = document.getElementById('register-role').value;
-            
-            if(!name || !email || !senha) { showMsg('msg-register', 'Preencha todos os campos.', 'err'); return; }
+
+            if(!name || !email || !senha) { 
+                showMsg('msg-register', 'Preencha os campos obrigatórios (Nome, E-mail, Senha).', 'err'); 
+                return; 
+            }
             
             setLoading('btn-register', true);
-            
-            const { ok, data } = await api('/users', { 
-                method: 'POST', 
-                body: JSON.stringify({ name, email, senha, role, description: '' }) 
-            });
-            
-            setLoading('btn-register', false);
-            
-            if (ok) {
-                showMsg('msg-register', data.message || 'Conta criada com sucesso! Redirecionando para login...', 'ok');
-                setTimeout(() => {
-                    switchTab('login');
-                    document.getElementById('login-email').value = email;
-                }, 1500);
-            } else {
-                showMsg('msg-register', data.error || 'Erro ao registrar usuário.', 'err');
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('senha', senha);
+            formData.append('role', role);
+
+            try {
+                const res = await fetch(BASE + '/users', {
+                    method: 'POST',
+                    body: formData 
+                });
+
+                const data = await res.json();
+                setLoading('btn-register', false);
+                
+                if (res.ok) {
+                    showMsg('msg-register', 'Sua conta AlimConnect foi criada! Faça login...', 'ok');
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.getElementById('login-email').value = email;
+                    }, 1500);
+                } else {
+                    showMsg('msg-register', data.error || 'Ocorreu um erro ao criar sua conta.', 'err');
+                }
+            } catch (err) {
+                setLoading('btn-register', false);
+                showMsg('msg-register', 'Não foi possível se conectar ao servidor.', 'err');
             }
         }
 
@@ -474,11 +516,9 @@
             token = null;
             currentUser = null;
             document.getElementById('btn-portal').textContent = 'Acessar Portal';
-            
-            // Ao sair, bloqueia novamente o e-mail privado
             document.getElementById('email-fornecedor-protegido').classList.add('hidden');
             document.getElementById('email-fornecedor-trava').classList.remove('hidden');
-            
+            document.getElementById('painel-fornecedor').classList.add('hidden'); // Oculta painel no logout
             goToPage('home');
         }
 
@@ -491,14 +531,14 @@
             if (ok) {
                 currentUser.name = name;
                 document.getElementById('dash-name').textContent = name;
-                showMsg('msg-update-name', 'Nome updated!', 'ok');
+                showMsg('msg-update-name', 'Nome atualizado com sucesso!', 'ok');
             } else {
                 showMsg('msg-update-name', data.error || 'Erro ao atualizar.', 'err');
             }
         }
 
         async function doDeleteAccount() {
-            if(!confirm('Deseja mesmo excluir sua conta permanentemente?')) return;
+            if(!confirm('Deseja mesmo excluir sua conta permanentemente? Esta ação é irreversível.')) return;
             setLoading('btn-delete-me', true);
             const { ok } = await api('/users/' + currentUser.id, { method:'DELETE' });
             setLoading('btn-delete-me', false);

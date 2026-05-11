@@ -1,6 +1,7 @@
 const API_URL = 'http://localhost:3000/api';
+const BASE_URL = 'http://localhost:3000';
 
-// --- 1. LOGIN REAL ---
+// --- 1. LOGIN (Envia JSON) ---
 document.getElementById('login-form')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -18,21 +19,46 @@ document.getElementById('login-form')?.addEventListener('submit', async function
         const data = await response.json();
 
         if (response.ok) {
-            // SALVA O JWT E DADOS DO USUÁRIO
             localStorage.setItem('alim_token', data.token);
             localStorage.setItem('alim_user', JSON.stringify(data.user));
-
-            alert(data.message || "Login realizado com sucesso!");
+            alert("Bem-vindo ao AlimConnect!");
             window.location.href = "dashboard.html";
         } else {
-            if (msgErro) msgErro.textContent = data.error || "Credenciais inválidas.";
+            if (msgErro) msgErro.textContent = data.error || "E-mail ou senha incorretos.";
         }
     } catch (error) {
         if (msgErro) msgErro.textContent = "Erro ao conectar com o servidor.";
     }
 });
 
-// --- 2. CARREGAR PRODUTOS (VITRINE) ---
+// --- 2. CADASTRO (Envia FormData para aceitar FOTO) ---
+document.getElementById('register-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const msgErro = document.getElementById('msg-erro-register');
+    const formData = new FormData(this); // Pega todos os campos e a imagem automaticamente
+
+    try {
+        const response = await fetch(`${API_URL}/users`, {
+            method: 'POST',
+            // DICA: Não defina Headers aqui! O FormData faz isso sozinho.
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Conta criada com sucesso! Faça seu login.");
+            window.location.href = "login.html";
+        } else {
+            if (msgErro) msgErro.textContent = data.error || "Erro ao cadastrar.";
+        }
+    } catch (error) {
+        if (msgErro) msgErro.textContent = "Erro ao conectar com o servidor.";
+    }
+});
+
+// --- 3. VITRINE DE PRODUTOS ---
 async function carregarProdutos() {
     const grid = document.querySelector('.grid-produtos');
     if (!grid) return;
@@ -41,20 +67,25 @@ async function carregarProdutos() {
         const response = await fetch(`${API_URL}/products`);
         const produtos = await response.json();
 
-        grid.innerHTML = produtos.map(p => `
-            <div class="card-produto">
-                <img src="http://localhost:3000/uploads/${p.image}" alt="${p.name}" onerror="this.src='assets/placeholder.png'">
-                <h3>${p.name}</h3>
-                <p>R$ ${p.price}</p>
-                <button onclick="adicionarAoCarrinho(${p.id})">Comprar</button>
-            </div>
-        `).join('');
+        grid.innerHTML = produtos.map(p => {
+            const foto = p.img || p.image || 'placeholder.png';
+            const urlImagem = foto.startsWith('uploads') ? `${BASE_URL}/${foto}` : `${BASE_URL}/uploads/${foto}`;
+            
+            return `
+                <div class="card-produto">
+                    <img src="${urlImagem}" alt="${p.name}" onerror="this.src='assets/placeholder.png'">
+                    <h3>${p.name}</h3>
+                    <p class="preco">R$ ${p.price}</p>
+                    <button onclick="adicionarAoCarrinho(${p.id})">Comprar</button>
+                </div>
+            `;
+        }).join('');
     } catch (err) {
-        console.error("Erro ao carregar produtos do banco.");
+        console.error("Erro ao carregar produtos.");
     }
 }
 
-// --- 3. BUSCAR PERFIL (Resolve o erro do /users/me) ---
+// --- 4. PERFIL DO USUÁRIO ---
 async function carregarPerfil() {
     const nomeExibicao = document.getElementById('user-name-display');
     const token = localStorage.getItem('alim_token');
@@ -70,63 +101,29 @@ async function carregarPerfil() {
         if (response.ok) {
             const user = await response.json();
             nomeExibicao.textContent = user.name;
-            // Preenche formulários de edição se existirem
-            if (document.getElementById('edit-name')) {
-                document.getElementById('edit-name').value = user.name;
-            }
+        } else if (response.status === 401 || response.status === 403) {
+            realizarLogout();
         }
     } catch (error) {
         console.error("Erro ao carregar perfil.");
     }
 }
 
-// --- 4. DELETAR USUÁRIO (Ajustado com Token) ---
-async function deletarConta(id) {
+// --- 5. LOGOUT ---
+async function realizarLogout() {
     const token = localStorage.getItem('alim_token');
-    if (!confirm("Tem certeza que deseja excluir sua conta permanentemente?")) return;
-
-    try {
-        const response = await fetch(`${API_URL}/users/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            alert("Conta removida com sucesso.");
-            realizarLogout();
-        } else {
-            alert(data.error || "Erro ao deletar conta.");
-        }
-    } catch (error) {
-        alert("Erro na requisição.");
-    }
-}
-
-// --- 5. RESET DE SENHA ---
-async function resetarSenha(email, novaSenha) {
-    try {
-        const response = await fetch(`${API_URL}/auth/reset-password`, {
+    if (token) {
+        await fetch(`${API_URL}/logout`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, novaSenha })
-        });
-        const data = await response.json();
-        alert(data.message || data.error);
-    } catch (error) {
-        console.error("Erro ao resetar senha");
+            headers: { 'Authorization': `Bearer ${token}` }
+        }).catch(() => {});
     }
-}
-
-// --- 6. LOGOUT ---
-function realizarLogout() {
-    localStorage.removeItem('alim_token');
-    localStorage.removeItem('alim_user');
+    localStorage.clear();
     window.location.href = "index.html";
 }
 
-// Inicialização baseada na página carregada
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-    carregarProdutos(); // Carrega produtos se houver a grid
-    carregarPerfil();   // Carrega perfil se estiver no dashboard
+    carregarProdutos();
+    carregarPerfil();
 });
