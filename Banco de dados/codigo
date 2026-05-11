@@ -14,7 +14,7 @@ CREATE TABLE users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Cria a tabela de produtos vinculada ao fornecedor
+-- 3. Cria a tabela de produtos vinculada ao fornecedor (ATUALIZADA)
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -24,6 +24,8 @@ CREATE TABLE products (
     stock INT DEFAULT 0,
     img VARCHAR(255),
     supplier_id INT,
+    -- NOVA COLUNA: Define se o produto aparece na loja ou não
+    status ENUM('pendente', 'aprovado', 'rejeitado') DEFAULT 'pendente',
     FOREIGN KEY (supplier_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -45,6 +47,7 @@ CREATE TABLE order_items (
     quantity INT NOT NULL DEFAULT 1,
     unit_price DECIMAL(10, 2) NOT NULL,
     subtotal DECIMAL(10, 2) NOT NULL,
+    -- Status do pedido (compra)
     status ENUM('pendente', 'aprovado', 'cancelado', 'enviado', 'entregue') DEFAULT 'pendente',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,

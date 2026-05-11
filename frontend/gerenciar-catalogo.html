@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlimConnect - Gerenciar Catálogo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .msg { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 13px; display: none; }
+        .msg.ok { background: #e8f5ee; color: #1a5c35; display: block; }
+        .msg.err { background: #fdeaea; color: #8b1a1a; display: block; }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Estilo para o container de upload */
+        .upload-area {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #FFCC80;
+            background-color: #fffaf0;
+        }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] text-slate-900 min-h-screen">
+
+    <header class="flex items-center justify-between px-6 py-4 bg-white border-b sticky top-0 z-50">
+        <div class="flex items-center gap-2 text-[#5D4037] cursor-pointer" onclick="window.location.href='index.html'">
+            <span class="material-symbols-outlined text-[#FFCC80]">nutrition</span>
+            <span class="text-xl font-extrabold tracking-tight">AlimConnect</span>
+        </div>
+        <nav class="flex items-center gap-4">
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-[#5D4037] transition">
+                <span class="material-symbols-outlined text-lg">arrow_back</span> Voltar ao Painel
+            </button>
+        </nav>
+    </header>
+
+    <main class="px-6 py-12 max-w-5xl mx-auto">
+        <div class="bg-white p-8 rounded-[32px] shadow-sm border border-slate-100">
+            
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-[#FFCC80]/20 p-3 rounded-2xl">
+                    <span class="material-symbols-outlined text-[#5D4037] text-3xl">add_box</span>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black text-[#5D4037]">Novo Produto</h2>
+                    <p class="text-sm text-slate-400">Preencha os detalhes e envie a foto para aprovação.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                
+                <div class="lg:col-span-1">
+                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-2 tracking-wider">Imagem do Produto</label>
+                    <div class="upload-area relative w-full aspect-square rounded-[24px] flex flex-col items-center justify-center overflow-hidden bg-slate-50 cursor-pointer" onclick="document.getElementById('prod-img').click()">
+                        <img id="preview" class="hidden w-full h-full object-cover absolute inset-0">
+                        <div id="upload-placeholder" class="flex flex-col items-center text-center p-4">
+                            <span class="material-symbols-outlined text-slate-300 text-5xl mb-2">image_search</span>
+                            <p class="text-xs font-bold text-slate-400">Clique para enviar ou arraste a foto</p>
+                        </div>
+                    </div>
+                    <input type="file" id="prod-img" accept="image/*" class="hidden" onchange="previewImage(event)">
+                    <p class="text-[10px] text-slate-400 mt-2 italic text-center">Formatos aceitos: JPG, PNG. Máx 2MB.</p>
+                </div>
+
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-2 tracking-wider">Nome do Produto</label>
+                            <input type="text" id="prod-nome" placeholder="Ex: Amendoim Crocante 500g" 
+                                class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-2 tracking-wider">Preço Sugerido (R$)</label>
+                            <input type="number" id="prod-preco" placeholder="0,00" step="0.01"
+                                class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition-all text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-2 tracking-wider">Descrição Detalhada e Ingredientes</label>
+                        <textarea id="prod-desc" rows="5" placeholder="Descreva o produto, peso, validade e informações nutricionais..." 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#FFCC80] transition-all text-sm resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-4">
+                        <button onclick="enviarParaAdmin()" id="btn-enviar" 
+                            class="w-full bg-[#5D4037] text-white py-4 rounded-2xl font-bold hover:bg-[#4a332c] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#5D4037]/10 uppercase tracking-widest text-sm">
+                            <span class="material-symbols-outlined">send</span>
+                            Enviar para o administrador confirmar o cadastro
+                        </button>
+                        
+                        <div id="msg-status" class="msg"></div>
+                        
+                        <p class="text-center text-[10px] text-slate-400 mt-4 font-bold uppercase tracking-widest">
+                            * Após o envio, nossa equipe revisará os dados e a imagem em até 24h.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const BASE = 'http://localhost:3000/api';
+
+        // Função para mostrar a prévia da imagem
+        function previewImage(event) {
+            const reader = new FileReader();
+            const preview = document.getElementById('preview');
+            const placeholder = document.getElementById('upload-placeholder');
+            
+            reader.onload = function() {
+                preview.src = reader.result;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        function showMsg(text, type) {
+            const el = document.getElementById('msg-status');
+            el.textContent = text;
+            el.className = 'msg ' + type;
+        }
+
+        function setLoading(on) {
+            const btn = document.getElementById('btn-enviar');
+            if (on) {
+                btn.disabled = true;
+                btn.dataset.orig = btn.innerHTML;
+                btn.innerHTML = '<span class="spinner"></span> Processando...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.orig;
+            }
+        }
+
+        async function enviarParaAdmin() {
+            const nome = document.getElementById('prod-nome').value.trim();
+            const preco = document.getElementById('prod-preco').value.trim();
+            const desc = document.getElementById('prod-desc').value.trim();
+            const foto = document.getElementById('prod-img').files[0];
+
+            if (!nome || !preco || !desc || !foto) {
+                showMsg('⚠️ Preencha todos os campos e envie uma foto.', 'err');
+                return;
+            }
+
+            setLoading(true);
+
+            // IMPORTANTE: Como estamos enviando um arquivo, usamos FormData em vez de JSON
+            const formData = new FormData();
+            formData.append('nome', nome);
+            formData.append('preco', preco);
+            formData.append('descricao', desc);
+            formData.append('imagem', foto); // O backend receberá o arquivo aqui
+            formData.append('status', 'aguardando_aprovacao');
+
+            
+
+            try {
+                const response = await fetch(BASE + '/produtos/pendentes', {
+                    method: 'POST',
+                    body: formData // Note que não usamos JSON.stringify nem headers de content-type aqui
+                });
+
+                setLoading(false);
+
+                if (response.ok) {
+                    showMsg('✅ Produto e foto enviados! Redirecionando...', 'ok');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2500);
+                } else {
+                    const data = await response.json();
+                    showMsg('❌ Erro: ' + (data.error || 'Não foi possível enviar.'), 'err');
+                }
+            } catch (err) {
+                setLoading(false);
+                showMsg('❌ Falha na conexão com o servidor.', 'err');
+            }
+        }
+    </script>
+</body>
+</html>
