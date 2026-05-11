@@ -107,15 +107,15 @@ MySQL Server (v8.0 ou superior)
 
     cd back
      
-    node src/server.js
-
     npm install express mysql2 dotenv multer bcrypt cors
 
-5. ir em na pasta /Dadosenv e achar o /env.info
+    node src/server.js
+
+4. ir em na pasta /Dadosenv e achar o /env.info
    
     cp.env.info.env
      
-6.  Configure as variaveis de ambiente:
+5.  Configure as variaveis de ambiente:
 
     MYSQL_HOST=localhost
     
@@ -126,7 +126,7 @@ MySQL Server (v8.0 ou superior)
     MYSQL_DB=alimconnect_db
     
 
-8.  Inicie o servidor
+6.  Inicie o servidor
 
      npm run dev
 
