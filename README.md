@@ -160,6 +160,9 @@ EXEMPLO DE PUT
   }   
   
 Banco de Dados
+1. Abra o MySQL
+2. Execute o script SQL abaixo
+3. Certifique-se de que o nome do banco corresponde ao arquivo `.env`
 
     O banco alimconnect_db possui as seguintes tabelas:
 
