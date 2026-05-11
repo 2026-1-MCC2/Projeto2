@@ -105,9 +105,11 @@ MySQL Server (v8.0 ou superior)
 
 3.   Instale as dependencias:
 
-     bd Backend
+    cd back
      
-     npm install
+    node src/server.js
+
+    npm install express mysql2 dotenv multer bcrypt cors
 
 5. ir em na pasta /Dadosenv e achar o /env.info
    
