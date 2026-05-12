@@ -1,0 +1,44 @@
+# 🥜 AlimConnect - Marketplace B2B
+
+Este é o projeto **AlimConnect**, uma plataforma de conexão entre fornecedores de snacks/nozes e compradores. Siga os passos abaixo para configurar o ambiente e rodar o projeto localmente.
+
+---
+
+## 🛠️ Configuração do Ambiente
+
+### 1. Clonar o Repositório
+Abra o seu terminal e clone o projeto do GitHub:
+```bash
+git clone [https://github.com/seu-usuario/alimconnect.git](https://github.com/seu-usuario/alimconnect.git)
+2. Banco de Dados (MySQL + XAMPP)
+Abra o XAMPP Control Panel e ative o módulo MySQL.
+
+Abra o seu gerenciador de banco (MySQL Workbench).
+
+Execute o script SQL do projeto para criar o banco e as tabelas (users e produtos_pendentes).
+
+3. Configurar o Backend (Node.js)
+Abra uma pasta chamada backend no terminal e execute:
+
+Instalar dependências: cd back
+npm install express mysql2 dotenv multer bcrypt cors
+node src/server.js
+💻 Como Rodar o Frontend
+No VS Code, abra o arquivo index.html.
+
+Certifique-se de ter a extensão Live Server instalada.
+
+Clique no botão "Go Live" (canto inferior direito do VS Code).
+
+O navegador abrirá a página inicial do site.
+
+🧪 Testando o Fluxo de Cadastro de Produtos
+Para testar se tudo está funcionando:
+
+Crie uma conta: Vá em "Acessar Portal" -> "Registrar" e escolha a opção Fornecedor.
+
+Faça Login: Entre com o e-mail e senha cadastrados.
+
+Cadastrar Produto: No painel de controle, preencha os dados do snack, anexe uma imagem e clique em "Enviar para Análise".
+
+Verificar Banco: O produto será salvo na tabela produtos_pendentes com o status "pendente".
