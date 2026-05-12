@@ -13,10 +13,84 @@ git clone [https://github.com/seu-usuario/alimconnect.git](https://github.com/se
 2. Banco de Dados (MySQL + XAMPP)
 Abra o XAMPP Control Panel e ative o módulo MySQL.
 
-Abra o seu gerenciador de banco (MySQL Workbench).
+Abra o seu gerenciador de banco (MySQL Workbench). Com o nome alimconnect_db e entre no nosso banco.
 
 Execute o script SQL do projeto para criar o banco e as tabelas (users e produtos_pendentes).
+-- 1. Cria o banco de dados
+CREATE DATABASE IF NOT EXISTS alimconnect_db;
+USE alimconnect_db;
 
+-- 2. Tabela de Usuários
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'comprador', 'fornecedor') NOT NULL,
+    description TEXT,
+    img VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. TABELA DE SOLICITAÇÕES (Onde o fornecedor pede permissão)
+-- O fornecedor cadastra aqui primeiro. O Admin vê e aprova.
+CREATE TABLE product_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    category VARCHAR(50),
+    stock INT DEFAULT 0,
+    img VARCHAR(255),
+    supplier_id INT,
+    status ENUM('pendente', 'aprovado', 'rejeitado') DEFAULT 'pendente',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 4. TABELA DE PRODUTOS (O Catálogo Oficial)
+-- Só entram aqui produtos que foram aprovados pelo Admin.
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    category VARCHAR(50),
+    stock INT DEFAULT 0,
+    img VARCHAR(255),
+    supplier_id INT,
+    request_id INT, -- Referência de qual solicitação gerou esse produto
+    active BOOLEAN DEFAULT TRUE, -- Para desativar um produto sem deletar
+    FOREIGN KEY (supplier_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (request_id) REFERENCES product_requests(id) ON DELETE SET NULL
+);
+
+-- 5. Favoritos e Pedidos (Mantidos conforme sua lógica)
+CREATE TABLE favorite_products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    buyer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    status ENUM('pendente', 'aprovado', 'cancelado', 'enviado', 'entregue') DEFAULT 'pendente',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+-- Teste 1: Ver se as tabelas existem
+SHOW TABLES;
+
+-- Teste 2: Ver se a tabela de pedidos de permissão tem a coluna status
+DESCRIBE product_requests; 
 3. Configurar o Backend (Node.js)
 Abra uma pasta chamada backend no terminal e execute:
 
