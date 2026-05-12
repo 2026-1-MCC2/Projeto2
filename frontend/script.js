@@ -31,17 +31,16 @@ document.getElementById('login-form')?.addEventListener('submit', async function
     }
 });
 
-// --- 2. CADASTRO (Envia FormData para aceitar FOTO) ---
+// --- 2. CADASTRO DE USUÁRIO (Envia FormData para aceitar FOTO) ---
 document.getElementById('register-form')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const msgErro = document.getElementById('msg-erro-register');
-    const formData = new FormData(this); // Pega todos os campos e a imagem automaticamente
+    const formData = new FormData(this);
 
     try {
         const response = await fetch(`${API_URL}/users`, {
             method: 'POST',
-            // DICA: Não defina Headers aqui! O FormData faz isso sozinho.
             body: formData
         });
 
@@ -55,6 +54,44 @@ document.getElementById('register-form')?.addEventListener('submit', async funct
         }
     } catch (error) {
         if (msgErro) msgErro.textContent = "Erro ao conectar com o servidor.";
+    }
+});
+
+// --- 2.1 NOVO: CADASTRO DE PRODUTO PENDENTE (Gerenciar Catálogo) ---
+// Certifique-se de que no seu HTML o <form> tenha id="form-produto"
+document.getElementById('form-produto')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const token = localStorage.getItem('alim_token');
+    const user = JSON.parse(localStorage.getItem('alim_user'));
+    
+    const formData = new FormData(this);
+
+    // Adiciona o supplier_id automaticamente se o usuário estiver logado
+    if (user && user.id) {
+        formData.append('supplier_id', user.id);
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/produtos/pendentes`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Sucesso! O produto Marilan foi enviado para análise.");
+            this.reset();
+        } else {
+            alert(data.error || "Erro ao cadastrar produto.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar:", error);
+        alert("Erro ao conectar com o servidor.");
     }
 });
 

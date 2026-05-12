@@ -1,11 +1,12 @@
 import { pool } from '../db.js';
 import fs from 'fs';
 
-// 1. LISTAR PRODUTOS
-// Retorna apenas produtos aprovados para o catálogo público
+// 1. LISTAR PRODUTOS (Catálogo Público)
 export async function listProducts(_, res) {
     try {
-        const [rows] = await pool.query("SELECT * FROM products WHERE status = 'aprovado'");
+        // Mudança: Listamos da tabela oficial 'products'. 
+        // Ela não tem coluna 'status', então pegamos tudo que está nela (pois já foi aprovado)
+        const [rows] = await pool.query("SELECT * FROM products");
         res.json(rows);
     } catch (err) {
         console.error("Erro ao listar produtos:", err);
@@ -13,8 +14,7 @@ export async function listProducts(_, res) {
     }
 }
 
-// 2. CRIAR PRODUTO (Oficial/Admin)
-// Usado quando o administrador ou fornecedor logado cadastra diretamente
+// 2. CRIAR PRODUTO (Direto na tabela Oficial - Geralmente pelo Admin)
 export async function createProduct(req, res) {
     const { name, description, price, category, stock, supplier_id } = req.body;
     const imgPath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -25,51 +25,52 @@ export async function createProduct(req, res) {
     }
 
     try {
+        // REMOVI a coluna 'status' aqui, porque na sua tabela 'products' ela não existe
         const [result] = await pool.query(
-            'INSERT INTO products (name, description, price, category, stock, img, supplier_id, status) VALUES (?,?,?,?,?,?,?,?)',
-            [name, description, price, category, stock || 0, imgPath, supplier_id, 'aprovado']
+            'INSERT INTO products (name, description, price, category, stock, img, supplier_id) VALUES (?,?,?,?,?,?,?)',
+            [name, description, price, category, stock || 0, imgPath, supplier_id]
         );
         res.status(201).json({ id: result.insertId, message: 'Produto adicionado com sucesso!' });
     } catch (err) {
-        console.error("Erro ao criar produto oficial:", err);
+        console.error("Erro ao criar produto oficial:", err.message);
         if (req.file) fs.unlink(req.file.path, () => {});
-        res.status(500).json({ error: 'Erro ao cadastrar produto.' });
+        res.status(500).json({ error: 'Erro ao cadastrar produto oficial.' });
     }
 }
 
-// 3. CRIAR PRODUTO PENDENTE (Gerenciar Catálogo)
-// Esta é a função que o seu formulário "gerenciar-catalogo.html" chama
+// 3. CRIAR PRODUTO PENDENTE (Tabela de SOLICITAÇÕES)
+// Esta função agora salva na tabela correta: product_requests
 export const createPendingProduct = async (req, res) => {
     try {
-        const { nome, preco, descricao } = req.body;
-        
-        // O Multer coloca os dados do arquivo em req.file
+        const { nome, preco, descricao, categoria, estoque, supplier_id } = req.body;
         const imgPath = req.file ? `/uploads/${req.file.filename}` : null;
 
-        // Validação simples
         if (!nome || !preco) {
             if (req.file) fs.unlink(req.file.path, () => {});
             return res.status(400).json({ error: "Nome e preço são obrigatórios." });
         }
 
-        // Importante: Verifique se os nomes das colunas no seu banco são estes:
-        // name, price, description, img, status
+        // AQUI ESTAVA O ERRO: Mudamos para 'product_requests' e incluímos o 'status'
         const sql = `
-            INSERT INTO products (name, price, description, img, status) 
-            VALUES (?, ?, ?, ?, 'pendente')
+            INSERT INTO product_requests (name, price, description, category, stock, img, supplier_id, status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pendente')
         `;
 
-        await pool.query(sql, [nome, preco, descricao, imgPath]);
+        await pool.query(sql, [
+            nome, 
+            preco, 
+            descricao, 
+            categoria || 'Geral', 
+            estoque || 0, 
+            imgPath, 
+            supplier_id || null
+        ]);
 
-        res.status(201).json({ message: "Produto enviado para análise com sucesso!" });
+        res.status(201).json({ message: "Solicitação de produto enviada com sucesso!" });
 
     } catch (error) {
-        // Isso vai imprimir o erro real no seu terminal para você ver se falta alguma coluna no banco
         console.error("ERRO NO BACKEND:", error.message);
-        
-        // Se deu erro, tentamos apagar a foto que o multer acabou de salvar
         if (req.file) fs.unlink(req.file.path, () => {});
-        
-        res.status(500).json({ error: "Falha interna no servidor ao processar catálogo." });
+        res.status(500).json({ error: "Falha ao enviar para product_requests: " + error.message });
     }
 };

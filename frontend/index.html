@@ -238,15 +238,42 @@
                 </div>
             </div>
 
-                <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col justify-between">
-                    <div>
-                        <h4 class="font-bold text-[#5D4037] mb-2 font-black">Aba "Meus Produtos"</h4>
-                        <p class="text-xs text-slate-500 mb-4">Gerencie preços, estoque e novos snacks.</p>
+            <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                <h4 class="font-black text-[#5D4037] mb-4">Cadastrar Novo Produto</h4>
+                <form id="form-produto" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Nome do Produto</label>
+                        <input type="text" name="nome" placeholder="Ex: Marilan Salgadinho 100g" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm" required>
                     </div>
-                    <button onclick="window.location.href='gerenciar-catalogo.html'" class="w-full bg-[#FFCC80] text-[#5D4037] py-3 rounded-xl font-bold hover:bg-[#ffbd5c] transition">
-                        Gerenciar Catálogo
-                    </button>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Preço (R$)</label>
+                        <input type="number" step="0.01" name="preco" placeholder="0.00" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Estoque Inicial</label>
+                        <input type="number" name="estoque" placeholder="0" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Descrição Curta</label>
+                        <textarea name="descricao" rows="2" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-[#FFCC80] text-sm"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Imagem do Produto</label>
+                        <input type="file" name="imagem" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#FFCC80] file:text-[#5D4037] hover:file:bg-[#ffbd5c]">
+                    </div>
+                    <button type="submit" class="md:col-span-2 bg-[#5D4037] text-white py-3 rounded-xl font-bold hover:bg-[#4a332c] transition">Enviar para Análise</button>
+                </form>
+                <div id="msg-status-produto" class="msg"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col justify-between">
+                <div>
+                    <h4 class="font-bold text-[#5D4037] mb-2 font-black">Aba "Meus Produtos"</h4>
+                    <p class="text-xs text-slate-500 mb-4">Gerencie preços, estoque e novos snacks.</p>
                 </div>
+                <button onclick="window.location.href='gerenciar-catalogo.html'" class="w-full bg-[#FFCC80] text-[#5D4037] py-3 rounded-xl font-bold hover:bg-[#ffbd5c] transition">
+                    Gerenciar Catálogo Completo
+                </button>
             </div>
         </div>
 
@@ -413,45 +440,47 @@
             }
         }
 
-        async function doLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const senha = document.getElementById('login-password').value; 
-            if(!email || !senha) { showMsg('msg-login', 'Preencha todos os campos.', 'err'); return; }
-            
-            setLoading('btn-login', true);
-            const { ok, data } = await api('/login', { method:'POST', body: JSON.stringify({email, senha}) });
-            setLoading('btn-login', false);
-            
-            if (ok) {
-                token = 'mock-token-jwt'; 
-                currentUser = data.user;
-                document.getElementById('btn-portal').textContent = 'Meu Perfil';
-                document.getElementById('dash-name').textContent = currentUser.name;
-                document.getElementById('dash-email').textContent = currentUser.email;
+       async function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const senha = document.getElementById('login-password').value; 
+    if(!email || !senha) { showMsg('msg-login', 'Preencha todos os campos.', 'err'); return; }
+    
+    setLoading('btn-login', true);
+    const { ok, data } = await api('/login', { method:'POST', body: JSON.stringify({email, senha}) });
+    setLoading('btn-login', false);
+    
+    if (ok) {
+        // Agora salvamos os dados para não deslogar ao recarregar
+        token = 'mock-token-jwt'; 
+        currentUser = data.user;
+        
+        localStorage.setItem('alim_token', token);
+        localStorage.setItem('alim_user', JSON.stringify(currentUser));
 
-                // CONTROLE DE PRIVACIDADE DO E-MAIL
-                if (currentUser.role === 'comprador') {
-                    document.getElementById('email-fornecedor-protegido').classList.remove('hidden');
-                    document.getElementById('email-fornecedor-trava').classList.add('hidden');
-                    document.getElementById('painel-fornecedor').classList.add('hidden'); // Oculta painel se for comprador
-                } else {
-                    document.getElementById('email-fornecedor-protegido').classList.add('hidden');
-                    document.getElementById('email-fornecedor-trava').classList.remove('hidden');
-                    document.getElementById('painel-fornecedor').classList.remove('hidden'); // Mostra painel se for fornecedor
-                }
+        document.getElementById('btn-portal').textContent = 'Meu Perfil';
+        document.getElementById('dash-name').textContent = currentUser.name;
+        document.getElementById('dash-email').textContent = currentUser.email;
 
-                goToPage('home');
-
-                const toast = document.getElementById('toast-welcome');
-                document.getElementById('toast-user-name').textContent = currentUser.name;
-                
-                setTimeout(() => toast.classList.add('show'), 300);
-                setTimeout(() => toast.classList.remove('show'), 4300);
-
-            } else {
-                showMsg('msg-login', data.error || 'Credenciais inválidas.', 'err');
-            }
+        if (currentUser.role === 'comprador') {
+            document.getElementById('email-fornecedor-protegido').classList.remove('hidden');
+            document.getElementById('email-fornecedor-trava').classList.add('hidden');
+            document.getElementById('painel-fornecedor').classList.add('hidden'); 
+        } else {
+            document.getElementById('email-fornecedor-protegido').classList.add('hidden');
+            document.getElementById('email-fornecedor-trava').classList.remove('hidden');
+            document.getElementById('painel-fornecedor').classList.remove('hidden'); 
         }
+
+        goToPage('home');
+        const toast = document.getElementById('toast-welcome');
+        document.getElementById('toast-user-name').textContent = currentUser.name;
+        setTimeout(() => toast.classList.add('show'), 300);
+        setTimeout(() => toast.classList.remove('show'), 4300);
+
+    } else {
+        showMsg('msg-login', data.error || 'Credenciais inválidas.', 'err');
+    }
+}
 
         async function doRegister() {
             const name = document.getElementById('register-name').value.trim();
@@ -460,7 +489,7 @@
             const role = document.getElementById('register-role').value;
 
             if(!name || !email || !senha) { 
-                showMsg('msg-register', 'Preencha os campos obrigatórios (Nome, E-mail, Senha).', 'err'); 
+                showMsg('msg-register', 'Preencha os campos obrigatórios.', 'err'); 
                 return; 
             }
             
@@ -476,51 +505,50 @@
                     method: 'POST',
                     body: formData 
                 });
-
                 const data = await res.json();
                 setLoading('btn-register', false);
-                
                 if (res.ok) {
-                    showMsg('msg-register', 'Sua conta AlimConnect foi criada! Faça login...', 'ok');
-                    setTimeout(() => {
-                        switchTab('login');
-                        document.getElementById('login-email').value = email;
-                    }, 1500);
+                    showMsg('msg-register', 'Sua conta AlimConnect foi criada!', 'ok');
+                    setTimeout(() => switchTab('login'), 1500);
                 } else {
-                    showMsg('msg-register', data.error || 'Ocorreu um erro ao criar sua conta.', 'err');
+                    showMsg('msg-register', data.error || 'Erro ao criar conta.', 'err');
                 }
             } catch (err) {
                 setLoading('btn-register', false);
-                showMsg('msg-register', 'Não foi possível se conectar ao servidor.', 'err');
+                showMsg('msg-register', 'Erro de conexão.', 'err');
             }
         }
 
         async function doResetPassword() {
             const email = document.getElementById('reset-email').value.trim();
             const password = document.getElementById('reset-password').value;
-            if(!email || !password) { showMsg('msg-reset', 'Preencha e-mail e nova senha.', 'err'); return; }
-
+            if(!email || !password) { showMsg('msg-reset', 'Preencha todos os campos.', 'err'); return; }
             setLoading('btn-reset', true);
             const { ok, data } = await api('/auth/reset-password', { method:'POST', body: JSON.stringify({email, senha: password}) });
             setLoading('btn-reset', false);
-
-            if(ok) {
-                showMsg('msg-reset', 'Senha redefinida com sucesso!', 'ok');
-                document.getElementById('login-email').value = email;
-            } else {
-                showMsg('msg-reset', data.error || 'Erro ao redefinir senha.', 'err');
-            }
+            if(ok) showMsg('msg-reset', 'Senha redefinida!', 'ok');
+            else showMsg('msg-reset', data.error || 'Erro ao redefinir.', 'err');
         }
 
-        async function doLogout() {
-            token = null;
-            currentUser = null;
-            document.getElementById('btn-portal').textContent = 'Acessar Portal';
-            document.getElementById('email-fornecedor-protegido').classList.add('hidden');
-            document.getElementById('email-fornecedor-trava').classList.remove('hidden');
-            document.getElementById('painel-fornecedor').classList.add('hidden'); // Oculta painel no logout
-            goToPage('home');
-        }
+       async function doLogout() {
+    // Limpa as variáveis da memória
+    token = null;
+    currentUser = null;
+
+    // Limpa os dados salvos no navegador (impede login automático)
+    localStorage.removeItem('alim_token');
+    localStorage.removeItem('alim_user');
+
+    // Reseta a interface para o estado deslogado
+    document.getElementById('btn-portal').textContent = 'Acessar Portal';
+    document.getElementById('painel-fornecedor').classList.add('hidden');
+    
+    // Esconde os e-mails protegidos caso o usuário fosse um comprador
+    document.getElementById('email-fornecedor-protegido').classList.add('hidden');
+    document.getElementById('email-fornecedor-trava').classList.remove('hidden');
+
+    goToPage('home');
+}
 
         async function doUpdateName() {
             const name = document.getElementById('update-name').value.trim();
@@ -531,26 +559,70 @@
             if (ok) {
                 currentUser.name = name;
                 document.getElementById('dash-name').textContent = name;
-                showMsg('msg-update-name', 'Nome atualizado com sucesso!', 'ok');
-            } else {
-                showMsg('msg-update-name', data.error || 'Erro ao atualizar.', 'err');
+                showMsg('msg-update-name', 'Nome atualizado!', 'ok');
             }
         }
+
+        // --- NOVA LÓGICA DE CADASTRO DE PRODUTO ---
+        document.getElementById('form-produto')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            if (currentUser && currentUser.id) {
+                formData.append('supplier_id', currentUser.id);
+            }
+
+            try {
+                const res = await fetch(BASE + '/produtos/pendentes', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert("Sucesso! Produto enviado para análise.");
+                    this.reset();
+                } else {
+                    alert(data.error || "Erro ao cadastrar produto.");
+                }
+            } catch (err) {
+                alert("Falha na conexão com o servidor.");
+            }
+        });
 
         async function doDeleteAccount() {
-            if(!confirm('Deseja mesmo excluir sua conta permanentemente? Esta ação é irreversível.')) return;
-            setLoading('btn-delete-me', true);
-            const { ok } = await api('/users/' + currentUser.id, { method:'DELETE' });
-            setLoading('btn-delete-me', false);
+            if(!confirm('Deseja mesmo excluir sua conta permanentemente?')) return;
+            const { ok } = await api('/users/me', { method: 'DELETE' });
             if (ok) {
+                alert('Conta excluída.');
                 doLogout();
-            } else {
-                showMsg('msg-delete-me', 'Erro ao excluir conta.', 'err');
             }
         }
 
-        render(produtos);
-        atualizarContador();
+       document.addEventListener('DOMContentLoaded', () => {
+    render(produtos);
+    atualizarContador();
+
+    // --- NOVO BLOCO PARA RECUPERAR O LOGIN ---
+    const savedToken = localStorage.getItem('alim_token');
+    const savedUser = localStorage.getItem('alim_user');
+
+    if (savedToken && savedUser) {
+        token = savedToken;
+        currentUser = JSON.parse(savedUser);
+        
+        document.getElementById('btn-portal').textContent = 'Meu Perfil';
+        document.getElementById('dash-name').textContent = currentUser.name;
+        document.getElementById('dash-email').textContent = currentUser.email;
+        
+        // Se for fornecedor, mostra o painel automaticamente
+        if (currentUser.role === 'fornecedor') {
+            document.getElementById('painel-fornecedor').classList.remove('hidden');
+        }
+    }
+    // -----------------------------------------
+});
+        
     </script>
 </body>
 </html>
