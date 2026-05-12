@@ -37,38 +37,56 @@ A solução busca otimizar a experiência do usuário, facilitar a gestão de pr
 
 ```
 Projeto2/
-├── 📂 Documentos/
-│   └── 📂 Entrega 1/
-│       ├── Cálculo 2
-│       ├── Desenvolvimento Web Full Stack
-│       ├── Gestão Empresarial e Dinâmica das Organizações
-│       ├── Projeto Interdisciplinar Programação Web
-│       └── Projeto em Banco de Dados
+├── 🗄️ banco-de-dados                                  # Scripts de criação das tabelas MySQL                                   
+├── 📂 documentos
+│   ├── 📂 entrega-1
+│   │   ├── 📁 Cálculo 2
+│   │   ├── 📁 Desenvolvimento Web Full Stack
+│   │   ├── 📁 Gestão Empresarial e Dinâmica das Organizações
+│   │   ├── 📁 Projeto Interdisciplinar Programação Web
+│   │   └── 📁 Projeto em Banco de Dados
+│   ├── 📂 entrega-2
+│   │   ├── 📁 Cálculo 2
+│   │   ├── 📁 Desenvolvimento Web Full Stack
+│   │   ├── 📁 Gestão Empresarial e Dinâmica das Organizações
+│   │   ├── 📁 Projeto Interdisciplinar Programação Web
+│   │   └── 📁 Projeto em Banco de Dados
+│   ├── 📂 imagem-documentos
+│   │   └── 📜 Banner_FECAP_CCOMP2S_ALIMCONNECT.pptx.pdf
+│   ├── 📄 Documento - Projeto de Extensão - COM Empresa.pdf
+│   └── 📄 Documento de Requisitos.pdf
 │
-├── 📂 Backend/
-│   ├── 📂 src/
-│   │   ├── 📂 controllers/
-│   │   │   ├── 📄 imageController.js    # CRUD de imagens no banco
-│   │   │   └── 📄 useController.js      # CRUD de usuários no banco
-│   │   ├── 📄 app.js                    # Prepara as ferramentas
-│   │   ├── 📄 db.js                     # Prepara as ferramentas
-│   │   ├── 📄 routes.js                 # Recebem o pedido do usuário
-│   │   ├── 📄 server.js                 # Inicia o app
-│   │   └── 📄 uploadConfig.js           # Salva o arquivo na pasta antes de registrar no banco
-│   ├── 📄 package.json                  # Servidor pronto para receber dados e arquivos do frontend
-│   └── 📄 package-lock.json
+├── 📂 back-end
+│   ├── 📂 src
+│   │   ├── 📂 controllers
+│   │   │   ├── 📄 authController.js                 # Regras de login, logout e reset de senha
+│   │   │   ├── 📄 productController.js              # Regras de listagem e criação de produtos
+│   │   │   └── 📄 userController.js                 # CRUD e gerenciamento de contas de usuários
+│   │   ├── 📂 middlewares
+│   │   │   └── 📄 authMiddleware.js                 # Filtro de segurança e validação de tokens
+│   │   ├── 📂 services
+│   │   │   └── 📄 tokenService.js                   # Gerador e validador de chaves JWT
+│   │   ├── 📄 app.js                                # Configuração do Express, CORS e rotas
+│   │   ├── 📄 db.js                                 # Conexão e pooling com o banco MySQL
+│   │   ├── 📄 routes.js                             # Definição dos caminhos/endpoints da API
+│   │   ├── 📄 server.js                             # Inicialização do servidor HTTP
+│   │   └── 📄 uploadConfig.js                       # Configuração do Multer para upload de arquivos
+│   ├── 📂 uploads                                   # Armazenamento local das imagens enviadas
+│   ├── 📄 package.json                              # Dependências do projeto e scripts de execução
+│   └── 📄 package-lock.json                         # Histórico de versões exatas das dependências
 │
-├── 📂 Frontend/
-│   ├── 📂 Assets/                       # Imagens do projeto
-│   ├── 📄 favoritos.html                # Exibe e gerencia favoritos no navegador
-│   ├── 📄 index.html                    # Exibe produtos, busca, ordena e controla favoritos
-│   ├── 📄 produto.html                  # Exibe produto e adiciona/remove dos favoritos
-│   ├── 📄 script.js                     # Simula login e valida usuário
-│   └── 📄 style.css                     # Define estilo visual da página
+├── 📂 front-end
+│   ├── 📂 assets                                    # Imagens, logotipos e ícones do projeto
+│   ├── 📄 contato.html                              # Página de contato com integração WhatsApp
+│   ├── 📄 favoritos.html                            # Exibição dos produtos salvos no LocalStorage
+│   ├── 📄 index.html                                # Vitrine principal, buscas e filtros
+│   ├── 📄 produto.html                              # Detalhes do produto selecionado
+│   ├── 📄 quem-somos.html                           # Página institucional da AlimConnect
+│   ├── 📄 script.js                                 # Lógica JS geral e interações da interface
+│   └── 📄 style.css                                 # Estilização visual global (Tailwind/CSS)
 │
-├── 📄 .gitignore
-├── 📄 package-lock.json
-└── 📄 README.md
+├── 📄 .gitignore                                    # Arquivos ignorados pelo Git (ex: node_modules, .env)
+└── 📄 README.md                                     # Documentação e guia de execução do projeto
 ```
 ### 📝 Descrição das Pastas:
 
@@ -78,9 +96,9 @@ Projeto2/
 - **`Readme.md`**: Este arquivo que você está lendo agora, contendo informações completas sobre o projeto.
   
 
-## 🗄 Banco de Dados: Arquivo Inicial
+## 🗄 Banco de Dados: Arquivo Final
 
-Abaixo, disponibilizamos o link para a modelagem do banco de dados. Vale ressaltar que a estrutura ainda está em desenvolvimento, por este motivo, as informações constam apenas no arquivo README.md do projeto.
+Abaixo, disponibilizamos o link para a modelagem do banco de dados. Vale ressaltar que a estrutura foi totalmente concluída e integrada ao projeto, com todas as informações detalhadas e atualizadas já disponíveis na pasta "Banco de Dados".
 
 * [Modelagem do Banco de Dados](./Documentos/Entrega%201/Projeto%20em%20Banco%20de%20Dados/README.md)
 
