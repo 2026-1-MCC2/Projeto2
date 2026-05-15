@@ -6,28 +6,45 @@ let token = localStorage.getItem('alim_token');
 let currentUser = JSON.parse(localStorage.getItem('alim_user'));
 
 // --- FUNÇÃO DE VERIFICAÇÃO GLOBAL ---
-// Essa função roda em TODAS as páginas para manter o usuário logado visualmente
 function verificarEstadoLogin() {
     const btnPortal = document.getElementById('btn-portal');
     const dashName = document.getElementById('dash-name');
     const dashEmail = document.getElementById('dash-email');
     const painelFornecedor = document.getElementById('painel-fornecedor');
 
+    // 1. CASO: USUÁRIO LOGADO
     if (token && currentUser) {
-        // Se houver token, altera o botão do cabeçalho em qualquer página
         if (btnPortal) {
             btnPortal.textContent = 'Meu Perfil';
-            // Se estiver na index (que usa goToPage), manda para o dashboard
-            // Se estiver em páginas externas, o link natural do HTML já resolve
+            
+            // Se estiver em páginas externas, prepara o redirecionamento para o PERFIL
+            if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/' && !window.location.pathname.endsWith('frontend/')) {
+                btnPortal.href = "index.html";
+                btnPortal.onclick = () => {
+                    localStorage.setItem('comando_abrir_perfil', 'true');
+                };
+            }
         }
 
-        // Se estiver na página de Dashboard (Perfil)
         if (dashName) dashName.textContent = currentUser.name;
         if (dashEmail) dashEmail.textContent = currentUser.email;
 
-        // Se for fornecedor, mostra as ferramentas de venda
         if (currentUser.role === 'fornecedor' && painelFornecedor) {
             painelFornecedor.classList.remove('hidden');
+        }
+    } 
+    // 2. CASO: USUÁRIO DESLOGADO
+    else {
+        if (btnPortal) {
+            btnPortal.textContent = 'Acessar Portal';
+            
+            // Se estiver fora, prepara o redirecionamento para o LOGIN
+            if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/' && !window.location.pathname.endsWith('frontend/')) {
+                btnPortal.href = "index.html";
+                btnPortal.onclick = () => {
+                    localStorage.setItem('comando_abrir_login', 'true');
+                };
+            }
         }
     }
 }
@@ -49,10 +66,10 @@ async function doLogin() {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem('alim_token', 'mock-token-jwt'); // Simulação de token
+            // Importante: use o token real vindo do banco (data.token) se já tiver, 
+            // ou mantenha o mock se for teste.
+            localStorage.setItem('alim_token', data.token || 'mock-token-jwt'); 
             localStorage.setItem('alim_user', JSON.stringify(data.user));
-            
-            // Recarrega para aplicar as mudanças
             window.location.href = "index.html"; 
         } else {
             alert(data.error || 'Erro ao entrar.');
