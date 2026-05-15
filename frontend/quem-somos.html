@@ -48,12 +48,6 @@
                 <p>
                     Nossa metodologia fundamenta-se na convergência entre tecnologia e inteligência de mercado. Utilizamos ferramentas digitais avançadas e análise rigorosa de dados para converter operações tradicionais em modelos de negócio ágeis, estruturados e escaláveis.
                 </p>
-                <p>
-                    Reconhecemos que a evolução do setor está intrinsecamente ligada à capacidade de resposta às dinâmicas do mercado global. Por este motivo, desenvolvemos ecossistemas que facilitam o processo decisório, aprimoram o controle de fluxos e consolidam parcerias de longo prazo entre empresas e clientes finais.
-                </p>
-                <p class="border-l-4 border-[#FFCC80] pl-6 italic text-[#5D4037] font-medium">
-                    "Nosso compromisso é viabilizar o crescimento sustentável dos nossos parceiros através de resultados consistentes e inovação contínua."
-                </p>
             </div>
 
             <div class="space-y-6">
@@ -68,29 +62,8 @@
                                 <p class="text-slate-500 text-sm mt-1">Transformamos dados em decisões assertivas para o seu estoque.</p>
                             </div>
                         </div>
-
-                        <div class="flex items-start gap-4">
-                            <div class="size-12 bg-[#FFCC80]/20 rounded-2xl flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[#5D4037]">precision_manufacturing</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-[#5D4037] text-xl">Processos Otimizados</h3>
-                                <p class="text-slate-500 text-sm mt-1">Redução de gargalos operacionais e maior agilidade na ponta.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-4">
-                            <div class="size-12 bg-[#FFCC80]/20 rounded-2xl flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[#5D4037]">rocket_launch</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-[#5D4037] text-xl">Escalabilidade</h3>
-                                <p class="text-slate-500 text-sm mt-1">Tecnologia preparada para acompanhar o crescimento do seu negócio.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
                 <div class="bg-[#5D4037] p-8 rounded-[32px] text-white text-center">
                     <p class="font-bold text-2xl mb-2">100% Digital</p>
                     <p class="text-[#FFCC80] text-sm font-bold uppercase tracking-widest">Transformando o atacado alimentar</p>
@@ -103,16 +76,6 @@
         <p>© 2026 AlimConnect - Inteligência em Distribuição.</p>
     </footer>
 
-    <script>
-        function atualizarContadorHeader() {
-            const favs = JSON.parse(localStorage.getItem('favoritosAlim')) || [];
-            const cont = document.getElementById('contador-favoritos');
-            if(cont) {
-                cont.innerText = favs.length;
-                cont.style.display = favs.length > 0 ? 'flex' : 'none';
-            }
-        }
-        atualizarContadorHeader();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
