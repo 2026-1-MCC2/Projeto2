@@ -109,7 +109,7 @@
     <script>
         const BASE = 'http://localhost:3000/api';
 
-        // Função para mostrar a prévia da imagem
+        // Função para mostrar a prévia da imagem (Mantida idêntica à sua)
         function previewImage(event) {
             const reader = new FileReader();
             const preview = document.getElementById('preview');
@@ -143,6 +143,7 @@
             }
         }
 
+        /* --- CORREÇÃO DA FUNÇÃO DE ENVIO INTEGRADO --- */
         async function enviarParaAdmin() {
             const nome = document.getElementById('prod-nome').value.trim();
             const preco = document.getElementById('prod-preco').value.trim();
@@ -156,20 +157,27 @@
 
             setLoading(true);
 
-            // IMPORTANTE: Como estamos enviando um arquivo, usamos FormData em vez de JSON
+            // Captura o usuário logado para amarrar o produto ao ID dele no banco
+            const currentUser = JSON.parse(localStorage.getItem('alim_user'));
+            const supplierId = currentUser ? currentUser.id : null;
+
             const formData = new FormData();
             formData.append('nome', nome);
             formData.append('preco', preco);
             formData.append('descricao', desc);
-            formData.append('imagem', foto); // O backend receberá o arquivo aqui
-            formData.append('status', 'aguardando_aprovacao');
-
+            formData.append('imagem', foto); 
+            formData.append('category', 'Snacks'); // Categoria padrão ou dinâmica
+            formData.append('estoque', 10);        // Estoque inicial padrão de teste
             
+            if (supplierId) {
+                formData.append('supplier_id', supplierId);
+            }
 
             try {
-                const response = await fetch(BASE + '/produtos/pendentes', {
+                // Ajustado para bater certinho na nossa rota unificada do backend
+                const response = await fetch('http://localhost:3000/api/produtos/pendentes', {
                     method: 'POST',
-                    body: formData // Note que não usamos JSON.stringify nem headers de content-type aqui
+                    body: formData 
                 });
 
                 setLoading(false);
@@ -178,7 +186,7 @@
                     showMsg('✅ Produto e foto enviados! Redirecionando...', 'ok');
                     setTimeout(() => {
                         window.location.href = 'index.html';
-                    }, 2500);
+                    }, 2000);
                 } else {
                     const data = await response.json();
                     showMsg('❌ Erro: ' + (data.error || 'Não foi possível enviar.'), 'err');
@@ -189,5 +197,3 @@
             }
         }
     </script>
-</body>
-</html>

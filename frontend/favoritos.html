@@ -25,24 +25,34 @@
     <script>
         const listaHtml = document.getElementById('lista-favoritos');
         
+        // Função para ler os favoritos usando a chave unificada correta
+        function obterFavoritos() {
+            return JSON.parse(localStorage.getItem('alim_favoritos')) || [];
+        }
+
         function render() {
-            let favoritos = JSON.parse(localStorage.getItem('favoritosAlim')) || [];
+            let favoritos = obterFavoritos();
             listaHtml.innerHTML = '';
+            
             if (favoritos.length === 0) {
                 listaHtml.innerHTML = '<p class="text-slate-500 text-center py-10">Sua lista está vazia.</p>';
             } else {
                 favoritos.forEach((p, i) => {
+                    // Regra de link inteligente: se o ID for número vai como ?id=, se for texto como ?item=
+                    const eDoBanco = !isNaN(p.id);
+                    const linkProduto = eDoBanco ? `produto.html?id=${p.id}` : `produto.html?item=${p.id}`;
+
                     const item = document.createElement('div');
                     item.className = "flex items-center gap-6 bg-white p-6 rounded-2xl border shadow-sm";
                     item.innerHTML = `
-                        <img src="${p.foto}" class="w-20 h-20 object-cover rounded-xl">
+                        <img src="${p.foto}" class="w-20 h-20 object-contain rounded-xl" onerror="this.src='assets/placeholder.png'">
                         <div class="flex-grow">
                             <p class="font-bold text-lg text-[#5D4037]">${p.nome}</p>
                             <p class="text-green-600 font-bold">R$ ${p.preco.toFixed(2)}</p>
                         </div>
                         <div class="flex gap-4">
-                            <a href="produto.html?item=${p.id}" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold">Ver Detalhes</a>
-                            <button onclick="remover(${i})" class="text-red-500 font-bold">Excluir</button>
+                            <a href="${linkProduto}" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-200 transition">Ver Detalhes</a>
+                            <button onclick="remover(${i})" class="text-red-500 font-bold hover:text-red-700 transition">Excluir</button>
                         </div>`;
                     listaHtml.appendChild(item);
                 });
@@ -50,12 +60,16 @@
         }
 
         window.remover = (i) => { 
-            let favoritos = JSON.parse(localStorage.getItem('favoritosAlim')) || [];
+            let favoritos = obterFavoritos();
+            const nomeRemovido = favoritos[i] ? favoritos[i].name || favoritos[i].nome : "Produto";
+            
             favoritos.splice(i, 1); 
-            localStorage.setItem('favoritosAlim', JSON.stringify(favoritos)); 
+            localStorage.setItem('alim_favoritos', JSON.stringify(favoritos)); 
+            
+            alert(`"${nomeRemovido}" foi removido dos favoritos.`);
             render(); 
         }
+
+        // Desenha a lista assim que a página abre
         render();
     </script>
-</body>
-</html>

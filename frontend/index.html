@@ -303,8 +303,56 @@
     </div>
 
     <script>
-        /* --- 1. PRODUTOS --- */
-        const produtos = [
+        // FUNÇÃO PARA FAZER O FORMULÁRIO DE CIMA ENVIAR TAMBÉM
+async function clonarEnvioDashboard(event) {
+    event.preventDefault(); // Impede o refresh da página
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    // Garante que o ID do fornecedor logado vai junto
+    const userLogado = JSON.parse(localStorage.getItem('alim_user'));
+    if (userLogado && userLogado.id) {
+        formData.append('supplier_id', userLogado.id);
+    }
+    
+    // Adiciona valores padrão para os campos que não estão no form de cima
+    formData.append('category', 'Snacks');
+
+    try {
+        const response = await fetch('http://localhost:3000/api/produtos/pendentes', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert("✅ Sucesso! Snack enviado de cima para a análise do Admin.");
+            form.reset();
+            
+            // Atualiza a lista automaticamente se a função estiver disponível
+            if (typeof carregarMeusProdutos === 'function') {
+                carregarMeusProdutos();
+            } else {
+                window.location.reload();
+            }
+        } else {
+            const data = await response.json();
+            alert("❌ Erro: " + (data.error || "Não foi possível enviar."));
+        }
+    } catch (err) {
+        alert("❌ Falha na conexão com o servidor.");
+    }
+}
+
+// Vincula a função ao formulário assim que a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+    const formCima = document.getElementById('form-produto');
+    if (formCima) {
+        formCima.onsubmit = clonarEnvioDashboard;
+    }
+});
+       /* --- 1. PRODUTOS --- */
+       const produtos = [
             { id: 'amendoim', nome: 'Amendoim Pimenta e Limão', foto: 'assets/amendoim.png', foto2: 'assets/amendoimpimenta.png', preco: 8.50 },
             { id: 'batata', nome: 'Batata Chips Artesanal', foto: 'assets/batata.png', foto2: 'assets/batataprato.png', preco: 12.00 },
             { id: 'biscoito', nome: 'Biscoitos de Polvilho', foto: 'assets/biscoito.png', foto2: 'assets/biscoitonoprato.png', preco: 6.90 },
@@ -320,19 +368,32 @@
             if(!grid) return;
             grid.innerHTML = '';
             lista.forEach(p => {
+                // IDENTIFICAÇÃO CORRETA: Vê se o ID é um número (banco) ou texto (fixo)
+                const eDoBanco = !isNaN(p.id);
+                
+                // Manda ?id= para o banco de dados e ?item= para o catálogo estático antigo
+                const linkProduto = eDoBanco ? `produto.html?id=${p.id}` : `produto.html?item=${p.id}`;
+
+                // Ajusta o caminho da imagem se vem do Multer (banco) ou local
+                let urlImagem = p.foto;
+                if (eDoBanco) {
+                    const nomeImagem = p.img || p.imagem || 'placeholder.png';
+                    urlImagem = `http://localhost:3000/uploads/${nomeImagem}`;
+                }
+
                 const div = document.createElement('div');
                 div.className = "bg-white p-4 rounded-2xl shadow-sm border group";
                 div.innerHTML = `
-                    <a href="produto.html?item=${p.id}">
+                    <a href="${linkProduto}">
                         <div class="h-48 bg-slate-200 rounded-xl mb-4 overflow-hidden relative">
-                            <img src="${p.foto}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
-                            <img src="${p.foto2}" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 scale-105">
-                        </div>
+    <img src="${urlImagem}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0" onerror="this.src='assets/placeholder.png'">
+    <img src="${urlImagem}" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 scale-105" onerror="this.src='assets/placeholder.png'">
+</div>
                         <h3 class="font-bold text-lg text-[#5D4037] hover:text-[#FFCC80]">${p.nome}</h3>
                     </a>
                     <div class="flex justify-between items-center mt-4 pt-3 border-t">
                         <span class="font-bold">R$ ${p.preco.toFixed(2)}</span>
-                        <a href="produto.html?item=${p.id}" class="text-sm font-bold text-red-400 hover:text-red-600 flex items-center gap-1">
+                        <a href="${linkProduto}" class="text-sm font-bold text-red-400 hover:text-red-600 flex items-center gap-1">
                             <span class="material-symbols-outlined text-sm">favorite</span> Ver Detalhes
                         </a>
                     </div>`;
@@ -379,11 +440,8 @@
             else goToPage('auth');
         }
     
-        /* --- 3. FUNÇÃO DE CADASTRO ATUALIZADA (CONECTANDO COM O FORMULÁRIO) --- */
+        /* --- 3. CADASTRO DE USUÁRIOS --- */
         async function doRegister() {
-            const msgErro = document.getElementById('msg-register');
-            
-            // Captura os dados diretamente dos inputs da tela
             const name = document.getElementById('register-name').value.trim();
             const email = document.getElementById('register-email').value.trim();
             const senha = document.getElementById('register-password').value;
@@ -394,7 +452,6 @@
                 return;
             }
 
-            // Usando FormData estruturado para bater certinho com o seu backend de upload
             const formData = new FormData();
             formData.append('name', name);
             formData.append('email', email);
@@ -402,7 +459,6 @@
             formData.append('role', role);
 
             try {
-                // Modifique para 'http://localhost:3000/api/users' se não estiver usando a constante BASE do script.js
                 const response = await fetch('http://localhost:3000/api/users', {
                     method: 'POST',
                     body: formData
@@ -412,7 +468,6 @@
 
                 if (response.ok) {
                     alert("Conta criada com sucesso! Faça seu login.");
-                    // Limpa os campos
                     document.getElementById('register-name').value = '';
                     document.getElementById('register-email').value = '';
                     document.getElementById('register-password').value = '';
@@ -425,8 +480,8 @@
             }
         }
     
-        /* --- 4. INICIALIZAÇÃO CONTROLE DE INTERFACE --- */
-        function renderizarPaginaCorreta() {
+       /* --- 4. INICIALIZAÇÃO E INTEGRAÇÃO DINÂMICA COM O BANCO --- */
+       async function renderizarPaginaCorreta() {
             const savedToken = localStorage.getItem('alim_token');
             const savedUser = localStorage.getItem('alim_user');
             const comandoPerfil = localStorage.getItem('comando_abrir_perfil');
@@ -443,6 +498,43 @@
                 }
             }
     
+            // Carrega dinamicamente o catálogo oficial gravado no MySQL/MariaDB
+            try {
+                const response = await fetch('http://localhost:3000/api/products');
+                if (response.ok) {
+                    const produtosDoBanco = await response.json();
+                    
+                    if (produtosDoBanco && produtosDoBanco.length > 0) {
+                        // Formata para o padrão visual esperado pela função render
+                        const produtosFormatados = produtosDoBanco.map(p => {
+                            // Pega o nome do arquivo de imagem seguro diretamente da coluna do banco
+                            const nomeImagem = p.img || 'placeholder.png';
+                            
+                            return {
+                                id: p.id,
+                                nome: p.name || p.nome || 'Snack Mix',
+                                // Garante que a propriedade interna seja mapeada corretamente
+                                img: nomeImagem,
+                                foto: `http://localhost:3000/uploads/${nomeImagem}`,
+                                foto2: `http://localhost:3000/uploads/${nomeImagem}`,
+                                preco: parseFloat(p.price || p.preco || 0)
+                            };
+                        });
+
+                        // Une os itens fixos locais com as aprovações reais do banco
+                        const listaCompleta = [...produtos, ...produtosFormatados];
+                        render(listaCompleta);
+                    } else {
+                        render(produtos);
+                    }
+                } else {
+                    render(produtos);
+                }
+            } catch (error) {
+                console.error("Aviso: Banco offline ou indisponível. Exibindo catálogo padrão.", error);
+                render(produtos);
+            }
+
             if (comandoPerfil === 'true' && savedToken) {
                 localStorage.removeItem('comando_abrir_perfil');
                 goToPage('dashboard');
@@ -455,8 +547,9 @@
         }
     
         document.addEventListener('DOMContentLoaded', () => {
-            render(produtos);
             renderizarPaginaCorreta();
         });
     </script>
     <script src="script.js"></script>
+</body>
+</html>

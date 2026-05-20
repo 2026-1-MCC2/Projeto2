@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - AlimConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] text-slate-900">
+
+    <header class="flex items-center justify-between px-6 py-4 bg-white border-b sticky top-0 z-50">
+        <div class="flex items-center gap-2 text-[#5D4037]">
+            <span class="material-symbols-outlined text-[#FFCC80] text-3xl font-bold">shield_person</span>
+            <span class="text-xl font-extrabold tracking-tight">AlimConnect Admin</span>
+        </div>
+        <nav class="flex items-center gap-6 font-semibold text-sm">
+            <a href="index.html" class="text-slate-600 hover:text-[#5D4037]">Voltar para o Site</a>
+            <button onclick="doLogout()" class="text-red-500 hover:underline">Sair</button>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-6 mt-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-[#5D4037]">Análise de Produtos</h1>
+                <p class="text-slate-500 text-sm">Aprove ou rejeite as solicitações de catálogo enviadas pelos fornecedores parceiros.</p>
+            </div>
+            
+            <button onclick="resetarBancoGeral()" class="bg-red-600 text-white px-5 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition flex items-center justify-center gap-1 shadow-lg shadow-red-600/10 self-start sm:self-center">
+                <span class="material-symbols-outlined text-sm">delete_sweep</span> Limpar Todos os Testes do Banco
+            </button>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 text-[11px] font-bold uppercase tracking-wider border-b">
+                        <th class="p-4">Produto</th>
+                        <th class="p-4">Descrição</th>
+                        <th class="p-4">Preço</th>
+                        <th class="p-4">Estoque</th>
+                        <th class="p-4 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-solicitacoes">
+                    <tr>
+                        <td colspan="5" class="text-slate-400 text-sm italic text-center py-10" id="msg-vazio">
+                            Carregando solicitações do banco de dados...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Carrega a lista de produtos aguardando análise em formato de tabela limpa
+        async function buscarProdutosPendentes() {
+            const tabela = document.getElementById('lista-solicitacoes');
+            
+            try {
+                // Adicionado o /api/ para conectar perfeitamente com o servidor e sumir o erro vermelho
+                const response = await fetch('http://localhost:3000/api/produtos/analise/pendentes');
+                const dados = await response.json();
+
+                if (response.ok && dados.length > 0) {
+                    tabela.innerHTML = dados.map(prod => {
+                        const nomeProd = prod.name || prod.nome || 'Produto sem nome';
+                        const descProd = prod.description || prod.descricao || 'Sem descrição.';
+                        const precoFinal = prod.price !== undefined ? prod.price : prod.preco;
+                        
+                        return `
+                            <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition font-medium text-sm">
+                                <td class="p-4 text-[#5D4037] font-bold">${nomeProd}</td>
+                                <td class="p-4 text-slate-500 max-w-xs truncate">${descProd}</td>
+                                <td class="p-4 text-slate-900">R$ ${parseFloat(precoFinal || 0).toFixed(2)}</td>
+                                <td class="p-4 text-slate-500">${prod.stock || prod.estoque || 0}</td>
+                                <td class="p-4 flex items-center justify-center gap-4">
+                                    <button onclick="salvarAnalise(${prod.id}, 'rejeitado')" class="text-red-500 font-bold hover:text-red-700 transition text-xs uppercase tracking-wider">
+                                        Recusar
+                                    </button>
+                                    <button onclick="salvarAnalise(${prod.id}, 'aprovado')" class="bg-green-600 text-white px-4 py-2 rounded-xl font-bold text-xs uppercase hover:bg-green-700 transition shadow-sm">
+                                        Aprovar
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tabela.innerHTML = `<tr><td colspan="5" class="text-slate-400 text-sm italic text-center py-10">Nenhum produto pendente de análise no momento!</td></tr>`;
+                }
+            } catch (err) {
+                tabela.innerHTML = `<tr><td colspan="5" class="text-red-500 text-sm italic text-center py-10">Erro de comunicação com o servidor.</td></tr>`;
+            }
+        }
+
+        // Aplica a aprovação ou rejeição do produto
+        async function salvarAnalise(id, decisao) {
+            if(!confirm(`Deseja aplicar o status "${decisao}" a esta solicitação?`)) return;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/produtos/analise/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: decisao })
+                });
+
+                if (response.ok) {
+                    alert(`Sucesso! Produto ${decisao === 'aprovado' ? 'aprovado e publicado na Vitrine!' : 'rejeitado.'}`);
+                    buscarProdutosPendentes(); // Atualiza a tabela na hora
+                } else {
+                    alert("Erro ao processar a ação no servidor.");
+                }
+            } catch (error) {
+                alert("Falha na conexão.");
+            }
+        }
+
+        // Reseta de forma limpa todas as tabelas de teste
+        async function resetarBancoGeral() {
+            if (!confirm("⚠️ ATENÇÃO: Isso vai apagar TODOS os produtos cadastrados por fornecedores e todas as solicitações pendentes do banco. Os produtos nativos do código continuarão normais. Deseja continuar?")) return;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/limpar-todos-testes', {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert("💥 Sucesso! O banco de dados foi limpo e todos os testes foram removidos.");
+                    buscarProdutosPendentes(); // Recarrega a tabela limpa
+                } else {
+                    alert("Erro ao tentar limpar o banco de dados.");
+                }
+            } catch (error) {
+                alert("Falha de conexão com o servidor.");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', buscarProdutosPendentes);
+    </script>
+</body>
+</html>
